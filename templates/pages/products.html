@@ -1,0 +1,72 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Data Produk {% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card my-4">
+        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+          <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+            <h6 class="text-white text-capitalize ps-3">Daftar Produk</h6>
+          </div>
+        </div>
+
+        <div class="card-body px-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Produk</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Kategori</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Harga</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stok</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tanggal Masuk</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Aksi</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {% for p in products %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <img src="{{ p.gambar }}" class="avatar avatar-sm me-3 border-radius-lg" alt="{{ p.nama_product }}">
+                      <div>
+                        <h6 class="mb-0 text-sm">{{ p.nama_product }}</h6>
+                        <p class="text-xs text-secondary mb-0">{{ p.deskripsi[:40] }}...</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ p.kategori }}</td>
+                  <td>Rp {{ "{:,.0f}".format(p.harga) }}</td>
+                  <td>{{ p.stok }}</td>
+                  <td>{{ p.tanggal_masuk }}</td>
+                  <td class="align-middle">
+                    <!-- Tombol Aksi -->
+                    <div class="dropdown">
+                      <button class="btn btn-link text-secondary mb-0" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v text-xs"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('home_blueprint.view_product', id=p.id_product) }}">View Details</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('home_blueprint.edit_product', id=p.id_product) }}">Edit</a></li>
+                        <li><a class="dropdown-item text-danger" href="{{ url_for('home_blueprint.delete_product', id=p.id_product) }}" onclick="return confirm('Yakin ingin hapus produk ini?')">Delete</a></li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

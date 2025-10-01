@@ -43,7 +43,6 @@ def index():
         'total_orders': total_orders,
         'top_product': top_product,
         'total_pendapatan': total_pendapatan
-
     }
     return render_template('pages/index.html', **context)
 

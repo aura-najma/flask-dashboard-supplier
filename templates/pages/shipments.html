@@ -3,9 +3,15 @@
 {% block title %} Template {% endblock title %}
 
 {% block content %}
+<!-- 
+  NOTE:
+  Kalau mau naruh HTML tambahan (misalnya card, table, chart, dll),
+  taruh di DALAM <div class="container-fluid py-2"> ini ya.
+  Jangan di luarnya, biar struktur layout tetap rapi dan footer tetap di posisi bawah.
+-->
 
-  <div class="container-fluid py-2">
-    {% include "includes/footer.html" %}
-  </div>
+<div class="container-fluid py-2">
+  {% include "includes/footer.html" %}
+</div>
 
 {% endblock content %}

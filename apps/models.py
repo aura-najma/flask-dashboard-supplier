@@ -2,21 +2,19 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-from email.policy import default
 from apps import db
 from sqlalchemy.exc import SQLAlchemyError
 from apps.exceptions.exception import InvalidUsage
 import datetime as dt
 from sqlalchemy.orm import relationship
 from enum import Enum
-from apps import db
 
 # 🏭 Tabel Supplier
 class Supplier(db.Model):
     __tablename__ = 'supplier'
     id_supplier = db.Column(db.Integer, primary_key=True)
     nama_supplier = db.Column(db.String(100))
-    alamat = db.Column(db.String(200))
+    kota = db.Column(db.String(100))  # 🔄 Ganti dari 'alamat' ke 'kota'
     telepon = db.Column(db.String(20))
     email = db.Column(db.String(100))
 
@@ -50,6 +48,7 @@ class Orders(db.Model):
     id_product = db.Column(db.Integer, db.ForeignKey('product.id_product'))
     id_supplier = db.Column(db.Integer, db.ForeignKey('supplier.id_supplier'))
     nama_pemesan = db.Column(db.String(100))
+    asal_pemesan = db.Column(db.String(100))  # 🆕 Tambahan kolom asal_pemesan
     jumlah = db.Column(db.Integer)
     tanggal_order = db.Column(db.Date)
     status_order = db.Column(db.String(50))
@@ -65,4 +64,4 @@ class Shipment(db.Model):
     distributor_name = db.Column(db.String(100))
     no_resi = db.Column(db.String(50))
     tanggal_kirim = db.Column(db.Date)
-    status_kirim = db.Column(db.String(50)) 
+    status_kirim = db.Column(db.String(50))

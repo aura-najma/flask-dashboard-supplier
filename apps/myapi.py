@@ -30,19 +30,18 @@ def get_suppliers():
 def get_products():
     products = Product.query.all()
     result = []
+
     for p in products:
         result.append({
             "id_product": p.id_product,
             "nama_product": p.nama_product,
-            "kategori": p.kategori,
             "harga": p.harga,
-            "stok": p.stok,
-            "satuan": p.satuan,
-            "berat": p.berat,
-            "deskripsi": p.deskripsi,
-            "gambar": p.gambar
+            "expired_date": p.expired_date.strftime('%Y-%m-%d') if p.expired_date else None,
+            "stok": p.stok
         })
+
     return jsonify(result)
+
 
 # -------------------------------
 # POST /api/orders

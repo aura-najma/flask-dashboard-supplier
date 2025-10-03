@@ -1,12 +1,10 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Profile {% endblock %} 
+{% block title %} Profile {% endblock %}
 
-<!-- Specific CSS goes HERE -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-
 <div class="container-fluid py-4">
     <div class="row">
         <div class="col-sm-8">
@@ -15,7 +13,7 @@
                     <h5>Edit Info</h5>
                 </div>
                 <div class="card-block px-4">
-                    <form class="row" method="POST">
+                    <form class="row" method="POST" enctype="multipart/form-data">
                         {{ form.hidden_tag() }}
 
                         {% for field in form %}
@@ -35,7 +33,7 @@
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
-                        </div>                                                
+                        </div>
                     </form>
                 </div>
             </div>
@@ -45,42 +43,37 @@
                 <div class="card-block">
                     <div class="d-flex align-items-center justify-content-center flex-column">
                         <div class="w-50 p-3">
-                            <img src="{{ url_for('static', filename='assets/img/avatar.jpg') }}" alt="profile image"
-                                class="img-fluid rounded-circle">
+                            {% if supplier and supplier.photo %}
+                                <img src="{{ url_for('static', filename='uploads/' ~ supplier.photo) }}" alt="Foto Supplier"
+                                    class="img-fluid rounded-circle">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='assets/img/avatar.jpg') }}" alt="profile image"
+                                    class="img-fluid rounded-circle">
+                            {% endif %}
                         </div>
                         <div class="text-center">
                             <h4 class="font-weight-bold h6">
-                                {{ current_user.username }}
+                                {% if supplier %}{{ supplier.nama_supplier }}{% else %}{{ current_user.username }}{% endif %}
                             </h4>
                             <p class="font-italic text-muted">
-                                {% if current_user.email %} {{ current_user.email }} {% endif %}
+                                {% if supplier and supplier.email %}{{ supplier.email }}{% else %}{{ current_user.email }}{% endif %}
+                            </p>
+                            <p>
+                                {% if supplier and supplier.kota %}Kota: {{ supplier.kota }}{% endif %}
+                                {% if supplier and supplier.telepon %}<br>Telepon: {{ supplier.telepon }}{% endif %}
                             </p>
                         </div>
                     </div>
-
                     <div class="small font-weight-light mt-4 text-center text-muted">
                         <p>
-                            This page is your private space.
-                            <br />
+                            Halaman ini adalah ruang pribadi supplier.<br />
                         </p>
                     </div>
                     <div class="d-flex justify-content-center align-items-center">
-                    
-                        <a href="https://github.com/app-generator/app-generator" 
-                        target="_blank" 
-                        class="h6 text-muted d-block m-1"><i
-                        class="icon feather icon-github"></i></a>
-
-                        <a href="https://twitter.com/webappseed" 
-                        target="_blank" 
-                        class="h6 text-muted d-block m-1"><i
-                        class="icon feather icon-twitter"></i></a>
-
-                        <a href="https://appseed.us/support/" 
-                        target="_blank" 
-                        class="h6 text-muted d-block m-1"><i
-                        class="icon feather icon-help-circle"></i></a>
-
+                        <a href="/edit_profile" class="h6 text-muted d-block m-1"><i class="icon feather icon-edit"></i> Edit Profil</a>
+                        <a href="/change_photo" class="h6 text-muted d-block m-1"><i class="icon feather icon-image"></i> Ganti Foto</a>
+                        <a href="/supplier_orders" class="h6 text-muted d-block m-1"><i class="icon feather icon-list"></i> Pesanan</a>
+                        <a href="/supplier_products" class="h6 text-muted d-block m-1"><i class="icon feather icon-package"></i> Produk</a>
                     </div>
                 </div>
             </div>

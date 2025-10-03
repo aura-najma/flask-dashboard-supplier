@@ -16,6 +16,9 @@ from apps.authentication.models import Users
 from flask_wtf import FlaskForm
 # Import API routes
 from api import *
+class ProfileForm(FlaskForm):
+    pass  # nanti field-nya ditambahkan dinamis di route
+
 # 🏠 DASHBOARD
 @blueprint.route('/')
 @blueprint.route('/index')
@@ -222,13 +225,16 @@ def view_product(id):
 @blueprint.route('/orders')
 @login_required
 def orders():
-    orders = Orders.query.all()
+    # Gabungkan orders dan detailnya
+    data = db.session.query(Orders, OrderDetail).join(OrderDetail, Orders.id_order == OrderDetail.id_order).all()
+
     context = {
         'segment': 'orders',
         'title': 'Pesanan Masuk',
-        'orders': orders
+        'data': data
     }
     return render_template('pages/orders.html', **context)
+
 
 # 🚚 PENGIRIMAN
 @blueprint.route('/shipments')
@@ -246,30 +252,32 @@ def shipments():
 @blueprint.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    class ProfileForm(FlaskForm):
-        pass
+    supplier = Supplier.query.first()  # Ganti filter sesuai user login nanti
 
-    readonly_fields = Users.readonly_fields if hasattr(Users, 'readonly_fields') else ['id', 'username', 'email']
-    for column in Users.__table__.columns:
+    # Field yang hanya bisa dibaca
+    readonly_fields = ['id_supplier', 'email']
+    full_width_fields = []  # Bisa isi ['alamat'] kalau ingin lebar penuh
+
+    # Tambahkan field dinamis ke form
+    for column in Supplier.__table__.columns:  # ✅ gunakan __table__
         if column.name not in readonly_fields:
             field = wtforms.StringField(column.name.title())
             setattr(ProfileForm, column.name, field)
 
-    form = ProfileForm(obj=current_user)
-
-    if form.validate_on_submit():
-        for field_name, field_value in form.data.items():
-            if field_name not in readonly_fields:
-                setattr(current_user, field_name, field_value)
-        db.session.commit()
-        return redirect(url_for('home_blueprint.profile'))
+    # Isi form dengan data supplier
+    form = ProfileForm(obj=supplier)
 
     context = {
         'segment': 'profile',
         'title': 'Profil Supplier',
+        'supplier': supplier,
         'form': form,
+        'readonly_fields': readonly_fields,
+        'full_width_fields': full_width_fields,
     }
+
     return render_template('pages/profile.html', **context)
+
 
 # 🧠 Fallback template (404 / 500)
 @blueprint.route('/<template>')

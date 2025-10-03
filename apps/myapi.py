@@ -201,3 +201,54 @@ def receive_orders():
         db.session.commit()
 
     return jsonify({"message": "Pesanan berhasil diterima oleh supplier"}), 201
+import requests
+
+@api_blueprint.route('/api/send_quote/<int:id_order>', methods=['POST'])
+def send_quote(id_order):
+    # 🔹 Ambil data order
+    order = Orders.query.get(id_order)
+    if not order:
+        return jsonify({"error": "Order tidak ditemukan"}), 404
+
+    # 🔹 Ambil data supplier pertama (contoh id=2)
+    supplier = Supplier.query.get(2)
+    if not supplier:
+        return jsonify({"error": "Supplier tidak ditemukan"}), 404
+
+    # 🔹 Buat payload untuk dikirim (semua dilower biar aman)
+    payload = {
+        "asal_pengirim": (supplier.kota or "").lower(),    # dari tabel supplier
+        "tujuan": (order.asal_pemesan or "").lower(),      # dari tabel orders
+        "kuantitas": order.total_berat or 0                # dari tabel orders
+    }
+    print("Payload yang dikirim ke /quote:", payload)
+
+    try:
+        # 🔹 Kirim POST ke service quote
+        response = requests.post("http://192.168.0.51:5000/api/quote", json=payload)
+        
+        # 🔹 Ambil hasil JSON dari service quote
+        result = response.json()
+        
+        # Pastikan service mengembalikan 'harga'
+        harga = result.get('harga_pengiriman') 
+
+        if harga is None:
+            return jsonify({
+                "message": "Response dari quote tidak mengandung harga",
+                "raw_response": result
+            }), 502
+
+        # 🔹 (Opsional) Simpan harga ke order, kalau kamu mau
+        # order.total_harga = harga
+        # db.session.commit()
+
+        return jsonify({
+            "message": "Harga ongkir berhasil diterima",
+            "payload_dikirim": payload,
+            "harga": harga,
+            "response_asli": result
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

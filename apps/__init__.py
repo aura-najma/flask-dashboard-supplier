@@ -22,7 +22,9 @@ def register_blueprints(app):
     for module_name in ('authentication', 'home', 'dyn_dt', 'charts', ):
         module = import_module('apps.{}.routes'.format(module_name))
         app.register_blueprint(module.blueprint)
-
+    # ✅ Tambahkan Blueprint API kamu secara manual
+    from apps.myapi import api_blueprint
+    app.register_blueprint(api_blueprint)
 
 def create_app(config):
 
@@ -44,3 +46,4 @@ def create_app(config):
     #app.register_blueprint(github_blueprint, url_prefix="/login")    
     #app.register_blueprint(google_blueprint, url_prefix="/login")    
     return app
+

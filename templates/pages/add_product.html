@@ -1,0 +1,132 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Tambah Produk{% endblock title %}
+
+{% block content %}
+<style>
+  /* 🌿 Background lembut */
+  body {
+    background: linear-gradient(135deg, #f5f7fa, #e4e9f2);
+  }
+
+  /* 🎴 Card efek bayangan */
+  .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  /* 🖤 Garis hitam untuk input */
+  .form-control {
+    border: 2px solid #000; /* garis hitam */
+    border-radius: 8px;
+    color: #222;
+  }
+
+  .form-control:focus {
+    border-color: #000 !important;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+
+  label {
+    font-weight: 600;
+    color: #111;
+  }
+
+  .card-header {
+    border-radius: 12px 12px 0 0 !important;
+  }
+</style>
+
+<div class="container py-5">
+  <div class="card border-0">
+    <div class="card-header bg-gradient-dark text-white">
+      <h5 class="mb-0">🛒 Tambah Produk Baru</h5>
+    </div>
+
+    <div class="card-body p-4 bg-white rounded-bottom">
+      <form method="POST" enctype="multipart/form-data" action="{{ url_for('home_blueprint.add_product') }}">
+        
+        <!-- Nama Produk -->
+        <div class="mb-3">
+          <label for="nama_product" class="form-label">Nama Produk</label>
+          <input type="text" id="nama_product" name="nama_product" class="form-control" required>
+        </div>
+
+        <!-- Kategori -->
+        <div class="mb-3">
+          <label for="kategori" class="form-label">Kategori</label>
+          <select id="kategori" name="kategori" class="form-control" required>
+              <option value="" disabled selected>Pilih kategori...</option>
+              <option value="Organik">Organik</option>
+              <option value="Non Organik">Non Organik</option>
+          </select>
+        </div>
+
+        <!-- Harga -->
+        <div class="mb-3">
+          <label for="harga" class="form-label">Harga (Rp)</label>
+          <input type="number" id="harga" name="harga" class="form-control" min="0" required>
+        </div>
+
+        <!-- Stok -->
+        <div class="mb-3">
+          <label for="stok" class="form-label">Stok</label>
+          <input type="number" id="stok" name="stok" class="form-control" min="0" required>
+        </div>
+
+        <!-- Satuan -->
+        <div class="mb-3">
+          <label for="satuan" class="form-label">Satuan</label>
+          <input type="text" id="satuan" name="satuan" class="form-control" placeholder="Contoh: pack / kg / pouch" required>
+        </div>
+
+        <!-- Berat -->
+        <div class="mb-3">
+          <label for="berat" class="form-label">Berat (kg)</label>
+          <input type="number" id="berat" name="berat" class="form-control" step="0.01" min="0" required>
+        </div>
+
+        <!-- Tanggal Masuk -->
+        <div class="mb-3">
+          <label for="tanggal_masuk" class="form-label">Tanggal Masuk</label>
+          <input type="date" id="tanggal_masuk" name="tanggal_masuk" class="form-control" required>
+        </div>
+
+        <!-- Expired Date -->
+        <div class="mb-3">
+          <label for="expired_date" class="form-label">Tanggal Kadaluarsa</label>
+          <input type="date" id="expired_date" name="expired_date" class="form-control" required>
+        </div>
+
+        <!-- Deskripsi -->
+        <div class="mb-3">
+          <label for="deskripsi" class="form-label">Deskripsi Produk</label>
+          <textarea id="deskripsi" name="deskripsi" class="form-control" rows="3" placeholder="Masukkan deskripsi singkat produk"></textarea>
+        </div>
+
+        <!-- Gambar Produk -->
+        <div class="mb-3">
+          <label for="gambar" class="form-label">Gambar Produk</label>
+          <input type="file" id="gambar" name="gambar_upload" class="form-control mb-2" accept="image/*">
+          <input type="url" id="gambar_link" name="gambar_link" class="form-control" placeholder="Atau masukkan URL gambar">
+        </div>
+
+        <!-- Supplier -->
+        <div class="mb-3">
+          <label for="id_supplier" class="form-label">Supplier</label>
+          <input type="number" id="id_supplier" name="id_supplier" value="2" class="form-control" readonly>
+          <small class="text-secondary">Supplier diisi otomatis (karena hanya 1 supplier)</small>
+        </div>
+
+        <!-- Tombol -->
+        <div class="d-flex justify-content-end mt-4">
+          <a href="{{ url_for('home_blueprint.products') }}" class="btn btn-secondary me-2">Kembali</a>
+          <button type="submit" class="btn btn-dark">Simpan Produk</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

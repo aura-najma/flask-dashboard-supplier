@@ -1,8 +1,5 @@
-{% extends "layouts/base.html" %}
-
-{% block title %} Template {% endblock title %}
-
-{% block content %}
+{% extends "layouts/base.html" %} {% block title %} Template {% endblock title
+%} {% block content %}
 
 <!-- 
   NOTE:
@@ -10,10 +7,466 @@
   taruh di DALAM <div class="container-fluid py-2"> ini ya.
   Jangan di luarnya, biar struktur layout tetap rapi dan footer tetap di posisi bawah.
 -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+/>
+
+<style>
+  /* === FONDASI & LATAR BELAKANG === */
+  .view-product-body {
+    font-family: "Poppins", sans-serif;
+    background-color: #eef1f5; /* Warna dasar Neumorphism */
+    padding: 2rem;
+    min-height: 100vh;
+  }
+
+  /* === LAYOUT UTAMA DENGAN CSS GRID === */
+  .product-detail-container {
+    display: grid;
+    grid-template-columns: 1.2fr 1.5fr 1fr; /* 3 kolom: gambar, info, pembelian */
+    gap: 2rem;
+    max-width: 1400px;
+    margin: auto;
+  }
+
+  /* === GALERI GAMBAR === */
+  .image-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .main-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    /* Efek Neumorphism pada gambar utama */
+    box-shadow: 8px 8px 15px #c5c8cb, -8px -8px 15px #ffffff;
+  }
+  .thumbnail-images {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+  }
+  .thumbnail {
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+  }
+  .thumbnail:hover,
+  .thumbnail.active {
+    opacity: 1;
+    border-color: #007bff;
+    transform: scale(1.05);
+  }
+
+  /* === KARTU INFO PRODUK (Glassmorphism) === */
+  .product-info {
+    padding: 2rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  }
+  .detail-product-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+  }
+  .detail-product-price {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2a2a2a;
+    margin-bottom: 2rem;
+  }
+  .details-content {
+    margin-top: 1rem;
+    color: #333;
+    font-size: 0.95rem;
+  }
+
+  /* === TAB INFO (Neumorphism) === */
+  .details-tabs {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid #d1d9e6;
+    margin-bottom: 1rem;
+  }
+  .tab-btn {
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #555;
+    border-radius: 10px 10px 0 0;
+    transition: all 0.3s ease;
+  }
+  .tab-btn.active {
+    color: #007bff;
+    background: #eef1f5;
+    /* Efek Neumorphism terangkat */
+    box-shadow: -5px -5px 10px #ffffff, 5px 5px 10px #c5c8cb;
+  }
+
+  /* === KOTAK PEMBELIAN (Glassmorphism) === */
+  .purchase-box {
+    padding: 1.5rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .purchase-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0;
+  }
+  .selected-product {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 0.5rem;
+    border-radius: 10px;
+  }
+  .selected-product img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+  }
+
+  /* === ELEMEN INTERAKTIF (Neumorphism) === */
+  .quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .quantity-btn,
+  .quantity-selector input {
+    border: none;
+    background-color: #eef1f5;
+    box-shadow: 5px 5px 10px #c5c8cb, -5px -5px 10px #ffffff;
+    transition: all 0.2s ease-in-out;
+  }
+  .quantity-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #555;
+  }
+  .quantity-btn:active {
+    /* Efek tertekan */
+    box-shadow: inset 5px 5px 10px #c5c8cb, inset -5px -5px 10px #ffffff;
+    color: #007bff;
+  }
+  .quantity-selector input {
+    width: 60px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.5rem;
+    -moz-appearance: textfield; /* Firefox */
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .stock-info {
+    font-size: 0.9rem;
+  }
+  .subtotal {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+  .subtotal-price {
+    font-weight: 700;
+  }
+
+  /* Tombol Utama */
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .btn-primary {
+    background: #007bff;
+    color: white;
+    box-shadow: 6px 6px 12px #c5c8cb, -6px -6px 12px #ffffff;
+  }
+  .btn-primary:hover {
+    background: #0056b3;
+    box-shadow: none;
+  }
+  .btn-secondary {
+    background: #eef1f5;
+    color: #333;
+    box-shadow: 6px 6px 12px #c5c8cb, -6px -6px 12px #ffffff;
+  }
+  .btn-secondary:active {
+    box-shadow: inset 6px 6px 12px #c5c8cb, inset -6px -6px 12px #ffffff;
+  }
+
+  .action-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Membuat item rata kiri */
+    padding-top: 1rem;
+    margin-top: auto; /* Mendorong tombol ke bawah jika ada ruang lebih */
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  .action-links a {
+    color: #555;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  .action-links a:hover {
+    color: #007bff;
+  }
+
+  /* RESPONSIVE DESIGN */
+  @media (max-width: 1200px) {
+    .product-detail-container {
+      grid-template-columns: 1fr 1fr; /* 2 kolom: (gambar+info), pembelian */
+      grid-template-areas:
+        "gallery info"
+        "purchase purchase";
+    }
+    .image-gallery {
+      grid-area: gallery;
+    }
+    .product-info {
+      grid-area: info;
+    }
+    .purchase-box {
+      grid-area: purchase;
+    }
+  }
+  @media (max-width: 768px) {
+    .product-detail-container {
+      grid-template-columns: 1fr; /* 1 kolom */
+      grid-template-areas:
+        "gallery"
+        "info"
+        "purchase";
+    }
+    .view-product-body {
+      padding: 1rem;
+    }
+  }
+</style>
 
 <div class="container-fluid py-2">
+  <div class="view-product-body">
+    <div class="product-detail-container">
+      <div class="image-gallery">
+        <div class="main-image">
+          <img
+            id="main-product-image"
+            src="{{ product.gambar or 'https://via.placeholder.com/600' }}"
+            alt="{{ product.nama_product }}"
+          />
+        </div>
+        <div class="thumbnail-images">
+          <img
+            class="thumbnail active"
+            src="{{ product.gambar or 'https://via.placeholder.com/150' }}"
+            alt="Thumbnail 1"
+          />
+          <img
+            class="thumbnail"
+            src="https://via.placeholder.com/150/EEEEEE/808080?Text=Img_2"
+            alt="Thumbnail 2"
+          />
+          <img
+            class="thumbnail"
+            src="https://via.placeholder.com/150/DDDDDD/808080?Text=Img_3"
+            alt="Thumbnail 3"
+          />
+          <img
+            class="thumbnail"
+            src="https://via.placeholder.com/150/CCCCCC/808080?Text=Img_4"
+            alt="Thumbnail 4"
+          />
+        </div>
+      </div>
+
+      <div class="product-info">
+        <h1 class="detail-product-title">{{ product.nama_product }}</h1>
+        <div class="detail-product-price" data-price="{{ product.harga }}">
+          Rp {{ "{:,.0f}".format(product.harga) }}
+        </div>
+
+        <div class="details-tabs">
+          <button class="tab-btn active">Detail</button>
+          <button class="tab-btn">Info Supplier</button>
+        </div>
+        <div class="details-content">
+          <p><strong>Kategori:</strong> {{ product.kategori }}</p>
+          <p>
+            <strong>Berat:</strong> {{ product.berat }} {{ product.satuan }}
+          </p>
+          <p><strong>Tanggal Masuk:</strong> {{ product.tanggal_masuk }}</p>
+          <p>{{ product.deskripsi }}</p>
+          {% if supplier %}
+          <div class="supplier-info" style="display: none">
+            <p><strong>Nama Supplier:</strong> {{ supplier.nama_supplier }}</p>
+            <p><strong>Kontak:</strong> {{ supplier.kontak_supplier }}</p>
+            <p><strong>Alamat:</strong> {{ supplier.alamat_supplier }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <aside class="purchase-box">
+        <h2 class="purchase-title">Stok dan Harga Produk</h2>
+        <div class="selected-product">
+          <img
+            src="{{ product.gambar or 'https://via.placeholder.com/80' }}"
+            alt="Selected Product"
+          />
+          <p>{{ product.nama_product }}</p>
+        </div>
+        <div class="quantity-selector">
+          <span class="stock-info"
+            >Stok: <strong>{{ product.stok }}</strong></span
+          >
+        </div>
+        <div class="subtotal">
+          <span>Harga</span>
+          <span class="subtotal-price" id="subtotal-price"
+            >Rp {{ "{:,.0f}".format(product.harga) }}</span
+          >
+        </div>
+        <div class="action-links">
+          <a href="#"><i class="fas fa-comment-dots"></i> Chat</a>
+          <a href="#"><i class="fas fa-heart"></i> Wishlist</a>
+          <a href="#"><i class="fas fa-share-alt"></i> Share</a>
+        </div>
+      </aside>
+    </div>
+  </div>
   {% include "includes/footer.html" %}
 </div>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // 1. FUNGSI GALERI GAMBAR
+    const mainImage = document.getElementById("main-product-image");
+    const thumbnails = document.querySelectorAll(".thumbnail");
 
+    thumbnails.forEach((thumb) => {
+      thumb.addEventListener("click", function () {
+        // Ganti gambar utama
+        mainImage.src = this.src;
+
+        // Atur class 'active'
+        thumbnails.forEach((t) => t.classList.remove("active"));
+        this.classList.add("active");
+      });
+    });
+
+    // 2. FUNGSI TAB
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const detailsContent = document.querySelector(".details-content p"); // Elemen konten detail
+    const supplierInfo = document.querySelector(".supplier-info");
+
+    // Sembunyikan semua konten kecuali yang aktif
+    if (supplierInfo) supplierInfo.style.display = "none";
+
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", function () {
+        tabButtons.forEach((btn) => btn.classList.remove("active"));
+        this.classList.add("active");
+
+        // Tampilkan konten sesuai tab
+        if (this.innerText === "Info Supplier" && supplierInfo) {
+          detailsContent.parentElement
+            .querySelectorAll("p")
+            .forEach((p) => (p.style.display = "none"));
+          supplierInfo.style.display = "block";
+        } else {
+          detailsContent.parentElement
+            .querySelectorAll("p")
+            .forEach((p) => (p.style.display = "block"));
+          if (supplierInfo) supplierInfo.style.display = "none";
+        }
+      });
+    });
+
+    // 3. FUNGSI KUANTITAS & SUBTOTAL
+    const btnPlus = document.getElementById("btn-plus");
+    const btnMinus = document.getElementById("btn-minus");
+    const quantityInput = document.getElementById("quantity-input");
+    const subtotalPriceEl = document.getElementById("subtotal-price");
+    const priceEl = document.querySelector(".detail-product-price");
+
+    const basePrice = parseFloat(priceEl.dataset.price);
+    const maxStock = parseInt(quantityInput.max);
+
+    function updateSubtotal() {
+      let quantity = parseInt(quantityInput.value);
+      if (isNaN(quantity) || quantity < 1) {
+        quantity = 1;
+        quantityInput.value = 1;
+      }
+
+      const newSubtotal = basePrice * quantity;
+
+      // Format ke Rupiah
+      subtotalPriceEl.textContent = "Rp " + newSubtotal.toLocaleString("id-ID");
+    }
+
+    btnPlus.addEventListener("click", function () {
+      let currentVal = parseInt(quantityInput.value);
+      if (currentVal < maxStock) {
+        quantityInput.value = currentVal + 1;
+        updateSubtotal();
+      }
+    });
+
+    btnMinus.addEventListener("click", function () {
+      let currentVal = parseInt(quantityInput.value);
+      if (currentVal > 1) {
+        quantityInput.value = currentVal - 1;
+        updateSubtotal();
+      }
+    });
+
+    quantityInput.addEventListener("change", updateSubtotal);
+  });
+</script>
 {% endblock content %}

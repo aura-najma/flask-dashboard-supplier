@@ -1,132 +1,333 @@
-{% extends "layouts/base.html" %}
-
-{% block title %}Tambah Produk{% endblock title %}
-
-{% block content %}
+{% extends "layouts/base.html" %} {% block title %}Tambah Produk{% endblock
+title %} {% block content %}
 <style>
-  /* 🌿 Background lembut */
-  body {
-    background: linear-gradient(135deg, #f5f7fa, #e4e9f2);
+  /* === FONDASI & LATAR BELAKANG === */
+  .view-product-body {
+    font-family: "Poppins", sans-serif;
+    background-color: #eef1f5; /* Warna dasar Neumorphism */
+    padding: 2rem;
   }
 
-  /* 🎴 Card efek bayangan */
+  /* === KARTU UTAMA (Glassmorphism) === */
   .card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-  }
-
-  /* 🖤 Garis hitam untuk input */
-  .form-control {
-    border: 2px solid #000; /* garis hitam */
-    border-radius: 8px;
-    color: #222;
-  }
-
-  .form-control:focus {
-    border-color: #000 !important;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
-  }
-
-  label {
-    font-weight: 600;
-    color: #111;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
   }
 
   .card-header {
-    border-radius: 12px 12px 0 0 !important;
+    background: transparent !important; /* Hilangkan background header agar menyatu */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  }
+  .card-header h5 {
+    color: #333;
+    font-weight: 600;
+  }
+
+  /* === ELEMEN FORM (Neumorphism) === */
+  .form-label {
+    font-weight: 600;
+    color: #3a3a3a;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control,
+  .form-select {
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    background-color: #eef1f5;
+    /* Efek Neumorphism tertekan/inset */
+    box-shadow: inset 5px 5px 10px #d1d9e6, inset -5px -5px 10px #ffffff;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    background-color: #eef1f5;
+    /* Beri efek glow biru saat aktif */
+    box-shadow: inset 5px 5px 10px #d1d9e6, inset -5px -5px 10px #ffffff,
+      0 0 0 3px rgba(0, 123, 255, 0.25);
+  }
+  /* 1. Membuat seluruh area input tanggal bisa diklik */
+  input[type="date"] {
+    position: relative;
+    color: #3a3a3a; /* Warna teks tanggal */
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0; /* Sembunyikan ikon kalender asli */
+    cursor: pointer;
+  }
+
+  /* 2. Tema Kustom untuk Kalender Flatpickr (Glassmorphism + Neumorphism) */
+  .flatpickr-calendar {
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(240, 243, 247, 0.7); /* Background Glassmorphism */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 8px 8px 20px #c5c8cb, -8px -8px 20px #ffffff;
+    width: 320px;
+  }
+  .flatpickr-months .flatpickr-month,
+  .flatpickr-current-month {
+    color: #333;
+    font-weight: 600;
+  }
+  .flatpickr-weekday {
+    color: #007bff;
+    font-weight: 500;
+  }
+  .flatpickr-day {
+    color: #3a3a3a;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    /* Efek Neumorphism terangkat */
+    box-shadow: 4px 4px 8px #c5c8cb, -4px -4px 8px #ffffff;
+    margin: 3px;
+  }
+  .flatpickr-day:hover {
+    background: #e0e5ec;
+  }
+  .flatpickr-day.today {
+    border: 2px solid #007bff;
+  }
+  .flatpickr-day.selected,
+  .flatpickr-day.startRange,
+  .flatpickr-day.endRange {
+    background: #007bff;
+    color: white;
+    /* Efek Neumorphism tertekan */
+    box-shadow: inset 4px 4px 8px #0056b3, inset -4px -4px 8px #00aaff;
+  }
+  .flatpickr-arrow {
+    fill: #333;
+  }
+
+  /* Hilangkan panah default pada input number */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  /* === TOMBOL (Neumorphism) === */
+  .btn-submit {
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    /* Efek Neumorphism terangkat */
+    box-shadow: 6px 6px 12px #c5c8cb, -6px -6px 12px #ffffff;
+  }
+  .btn-dark.btn-submit {
+    background-color: #343a40;
+    color: white;
+  }
+  .btn-dark.btn-submit:hover {
+    background-color: #23272b;
+  }
+  .btn-secondary.btn-submit {
+    background-color: #e0e5ec;
+    color: #3a3a3a;
+  }
+  .btn-submit:active {
+    /* Efek tertekan saat diklik */
+    box-shadow: inset 6px 6px 12px #c5c8cb, inset -6px -6px 12px #ffffff;
   }
 </style>
 
-<div class="container py-5">
+<div class="container py-5 view-product-body">
   <div class="card border-0">
-    <div class="card-header bg-gradient-dark text-white">
-      <h5 class="mb-0">🛒 Tambah Produk Baru</h5>
+    <div class="card-header">
+      <h5 class="mb-0">➕ Tambah Produk Baru</h5>
     </div>
 
-    <div class="card-body p-4 bg-white rounded-bottom">
-      <form method="POST" enctype="multipart/form-data" action="{{ url_for('home_blueprint.add_product') }}">
-        
-        <!-- Nama Produk -->
-        <div class="mb-3">
-          <label for="nama_product" class="form-label">Nama Produk</label>
-          <input type="text" id="nama_product" name="nama_product" class="form-control" required>
+    <div class="card-body p-4">
+      <form
+        method="POST"
+        enctype="multipart/form-data"
+        action="{{ url_for('home_blueprint.add_product') }}"
+      >
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="nama_product" class="form-label">Nama Produk</label>
+              <input
+                type="text"
+                id="nama_product"
+                name="nama_product"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="kategori" class="form-label">Kategori</label>
+              <select
+                id="kategori"
+                name="kategori"
+                class="form-select"
+                required
+              >
+                <option value="" disabled selected>Pilih kategori...</option>
+                <option value="Organik">Organik</option>
+                <option value="Non Organik">Non Organik</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="harga" class="form-label">Harga (Rp)</label>
+              <input
+                type="number"
+                id="harga"
+                name="harga"
+                class="form-control"
+                min="0"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="stok" class="form-label">Stok</label>
+              <input
+                type="number"
+                id="stok"
+                name="stok"
+                class="form-control"
+                min="0"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="deskripsi" class="form-label">Deskripsi Produk</label>
+              <textarea
+                id="deskripsi"
+                name="deskripsi"
+                class="form-control"
+                rows="4"
+                placeholder="Masukkan deskripsi singkat produk"
+              ></textarea>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="satuan" class="form-label">Satuan</label>
+              <input
+                type="text"
+                id="satuan"
+                name="satuan"
+                class="form-control"
+                placeholder="Contoh: pack / kg / pouch"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="berat" class="form-label">Berat (kg)</label>
+              <input
+                type="number"
+                id="berat"
+                name="berat"
+                class="form-control"
+                step="0.01"
+                min="0"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="tanggal_masuk" class="form-label"
+                >Tanggal Masuk</label
+              >
+              <input
+                type="date"
+                id="tanggal_masuk"
+                name="tanggal_masuk"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="expired_date" class="form-label"
+                >Tanggal Kadaluarsa</label
+              >
+              <input
+                type="date"
+                id="expired_date"
+                name="expired_date"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Gambar Produk</label>
+              <input
+                type="file"
+                name="gambar_upload"
+                class="form-control mb-2"
+                accept="image/*"
+              />
+              <input
+                type="url"
+                name="gambar_link"
+                class="form-control"
+                placeholder="Atau masukkan URL gambar"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="id_supplier" class="form-label">Supplier</label>
+              <input
+                type="number"
+                id="id_supplier"
+                name="id_supplier"
+                value="2"
+                class="form-control"
+                readonly
+              />
+              <small class="text-secondary">Supplier diisi otomatis.</small>
+            </div>
+          </div>
         </div>
 
-        <!-- Kategori -->
-        <div class="mb-3">
-          <label for="kategori" class="form-label">Kategori</label>
-          <select id="kategori" name="kategori" class="form-control" required>
-              <option value="" disabled selected>Pilih kategori...</option>
-              <option value="Organik">Organik</option>
-              <option value="Non Organik">Non Organik</option>
-          </select>
-        </div>
-
-        <!-- Harga -->
-        <div class="mb-3">
-          <label for="harga" class="form-label">Harga (Rp)</label>
-          <input type="number" id="harga" name="harga" class="form-control" min="0" required>
-        </div>
-
-        <!-- Stok -->
-        <div class="mb-3">
-          <label for="stok" class="form-label">Stok</label>
-          <input type="number" id="stok" name="stok" class="form-control" min="0" required>
-        </div>
-
-        <!-- Satuan -->
-        <div class="mb-3">
-          <label for="satuan" class="form-label">Satuan</label>
-          <input type="text" id="satuan" name="satuan" class="form-control" placeholder="Contoh: pack / kg / pouch" required>
-        </div>
-
-        <!-- Berat -->
-        <div class="mb-3">
-          <label for="berat" class="form-label">Berat (kg)</label>
-          <input type="number" id="berat" name="berat" class="form-control" step="0.01" min="0" required>
-        </div>
-
-        <!-- Tanggal Masuk -->
-        <div class="mb-3">
-          <label for="tanggal_masuk" class="form-label">Tanggal Masuk</label>
-          <input type="date" id="tanggal_masuk" name="tanggal_masuk" class="form-control" required>
-        </div>
-
-        <!-- Expired Date -->
-        <div class="mb-3">
-          <label for="expired_date" class="form-label">Tanggal Kadaluarsa</label>
-          <input type="date" id="expired_date" name="expired_date" class="form-control" required>
-        </div>
-
-        <!-- Deskripsi -->
-        <div class="mb-3">
-          <label for="deskripsi" class="form-label">Deskripsi Produk</label>
-          <textarea id="deskripsi" name="deskripsi" class="form-control" rows="3" placeholder="Masukkan deskripsi singkat produk"></textarea>
-        </div>
-
-        <!-- Gambar Produk -->
-        <div class="mb-3">
-          <label for="gambar" class="form-label">Gambar Produk</label>
-          <input type="file" id="gambar" name="gambar_upload" class="form-control mb-2" accept="image/*">
-          <input type="url" id="gambar_link" name="gambar_link" class="form-control" placeholder="Atau masukkan URL gambar">
-        </div>
-
-        <!-- Supplier -->
-        <div class="mb-3">
-          <label for="id_supplier" class="form-label">Supplier</label>
-          <input type="number" id="id_supplier" name="id_supplier" value="2" class="form-control" readonly>
-          <small class="text-secondary">Supplier diisi otomatis (karena hanya 1 supplier)</small>
-        </div>
-
-        <!-- Tombol -->
         <div class="d-flex justify-content-end mt-4">
-          <a href="{{ url_for('home_blueprint.products') }}" class="btn btn-secondary me-2">Kembali</a>
-          <button type="submit" class="btn btn-dark">Simpan Produk</button>
+          <a
+            href="{{ url_for('home_blueprint.products') }}"
+            class="btn btn-secondary btn-submit me-2"
+            >Kembali</a
+          >
+          <button type="submit" class="btn btn-dark btn-submit">
+            Simpan Produk
+          </button>
         </div>
-
       </form>
     </div>
   </div>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Inisialisasi Flatpickr pada kedua input tanggal
+    flatpickr("#tanggal_masuk", {
+      dateFormat: "Y-m-d", // Format tanggal yang sesuai dengan database
+      altInput: true, // Buat input tambahan yang lebih ramah dibaca
+      altFormat: "F j, Y", // Format tanggal yang ramah dibaca (e.g., October 4, 2025)
+    });
+
+    flatpickr("#expired_date", {
+      dateFormat: "Y-m-d",
+      altInput: true,
+      altFormat: "F j, Y",
+    });
+  });
+</script>
 {% endblock content %}

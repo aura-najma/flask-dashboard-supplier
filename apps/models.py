@@ -58,19 +58,33 @@ class Product(db.Model):
 
 
 # =======================
-# Tabel ORDER
+# Tabel ORDERS
 # =======================
 class Orders(db.Model):
     __tablename__ = 'orders'
 
     id_order = db.Column(db.Integer, primary_key=True)
+    id_retail = db.Column(db.Integer, nullable=False)
     nama_pemesan = db.Column(db.String(100), nullable=False)
     asal_pemesan = db.Column(db.String(100))
-    total_berat = db.Column(db.Numeric(10, 2))
+
+    # 💰 total biaya seluruh barang dalam 1 pesanan
+    total_order = db.Column(db.Numeric(12, 2), nullable=False)
+
+    # 📦 total semua kuantitas barang
+    total_kuantitas = db.Column(db.Integer, nullable=False)
+
     tanggal_order = db.Column(db.Date)
     status_order = db.Column(db.String(50))
 
-    # Relasi: 1 order punya banyak detail & 1 shipment
+    # 🚚 Kolom tambahan hasil integrasi ekspedisi / distributor
+    harga_pengiriman = db.Column(db.Numeric(10, 2), default=0)
+    total_pembayaran = db.Column(db.Numeric(10, 2), default=0)
+    id_distributor = db.Column(db.Integer)
+    eta_delivery_date = db.Column(db.Date)
+    no_resi = db.Column(db.String(100))
+
+    # 🔁 Relasi: 1 order punya banyak detail & 1 shipment
     order_details = db.relationship('OrderDetail', back_populates='order', lazy=True)
     shipment = db.relationship('Shipment', back_populates='order', uselist=False)
 
@@ -85,20 +99,27 @@ class OrderDetail(db.Model):
     __tablename__ = 'order_detail'
 
     id_detail = db.Column(db.Integer, primary_key=True)
+    
     id_order = db.Column(db.Integer, db.ForeignKey('orders.id_order'), nullable=False)
     id_product = db.Column(db.String(10), db.ForeignKey('product.id_product'), nullable=False)
     id_supplier = db.Column(db.Integer, db.ForeignKey('supplier.id_supplier'), nullable=False)
-    jumlah = db.Column(db.Integer)
+
+    # 📦 Ganti dari 'jumlah' ke 'kuantitas'
+    kuantitas = db.Column(db.Integer, nullable=False)
+    
+    # ⚖️ Berat total item (optional)
     berat = db.Column(db.Numeric(10, 2))
 
-    # Relasi dua arah
+    # 💰 Tambahan baru: jumlah_harga per produk
+    jumlah_harga = db.Column(db.Numeric(12, 2), nullable=False)
+
+    # 🔁 Relasi dua arah
     order = db.relationship('Orders', back_populates='order_details')
     product = db.relationship('Product', back_populates='order_details')
     supplier = db.relationship('Supplier', back_populates='order_details')
 
     def __repr__(self):
-        return f"<OrderDetail {self.id_detail} - Orders {self.id_order}>"
-
+        return f"<OrderDetail {self.id_detail} - Order {self.id_order}>"
 
 # =======================
 # Tabel SHIPMENT

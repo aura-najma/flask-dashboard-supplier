@@ -463,6 +463,7 @@ def kirim_ke_distributor():
         # ✅ Respon sukses ke frontend
         return jsonify({
             "message": "Pesanan berhasil diteruskan ke distributor",
+            "id_order": order.id_order,
             "status_order": order.status_order,
             "harga_pengiriman": float(order.harga_pengiriman or 0),
             "total_pembayaran": float(order.total_pembayaran or 0),

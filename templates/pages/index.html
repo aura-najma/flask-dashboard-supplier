@@ -1,368 +1,696 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}Home{% endblock title %}
+{% block title %}Dashboard - Supplier Sayur Beku{% endblock title %}
 
 {% block content %}
 
-    <div class="container-fluid py-2">
+<!-- Hero Section Full Screen -->
+<div class="hero-section position-relative overflow-hidden" style="height: 100vh;">
+  <!-- Background Slideshow -->
+  <div class="hero-background">
+    <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');"></div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1566385101042-7a432c884c6a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80');"></div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1574856344991-aaa31b6f4ce3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80');"></div>
+  </div>
+  
+  <!-- Overlay -->
+  <div class="hero-overlay"></div>
+  
+  
+
+  <!-- Hero Content -->
+  <div class="hero-content position-relative d-flex align-items-center h-100">
+    <div class="container">
       <div class="row">
-        
-        <div class="ms-3">
-          <h3 class="mb-0 h4 font-weight-bolder">Dashboard</h3>
-          <p class="mb-4">
-            Selamat datang di Supplier Sayur Beku.
+        <div class="col-lg-8">
+          <h1 class="display-3 fw-bold text-white mb-4" style="font-family: 'Georgia', serif;">
+            Dashboard Supplier Sayur Beku
+          </h1>
+          <p class="lead text-white mb-5" style="font-size: 1.3rem;">
+            Monitor performa bisnis Anda dengan data real-time dan analisis mendalam
           </p>
-        </div>
-        
-        <!-- Buat satu row ini mungkin bisa diambil jumlah produk, produk paling banyak terjual, jumlah order, total untung -->
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          <div class="card">
-            <div class="card-header p-2 ps-3">
-              <div class="d-flex justify-content-between">
-                <div>
-                  <p class="text-sm mb-0 text-capitalize">Jumlah Produk</p>
-                  <h4 class="mb-0">{{ total_products }}</h4>
-                </div>
-                <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
-                  <i class="material-symbols-rounded opacity-10">inventory</i>
-                </div>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-2 ps-3">
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          <div class="card">
-            <div class="card-header p-2 ps-3">
-              <div class="d-flex justify-content-between">
-                <div>
-                  <p class="text-sm mb-0 text-capitalize">Total Orders</p>
-                  <h4 class="mb-0">{{ total_orders }}</h4>
-                </div>
-                <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
-                  <i class="material-symbols-rounded opacity-10">shopping_cart</i>
-                </div>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-2 ps-3">
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          <div class="card">
-            <div class="card-header p-2 ps-3">
-              <div class="d-flex justify-content-between">
-                <div>
-                  <p class="text-sm mb-0 text-capitalize">Produk Paling Banyak Terjual</p>
-                  <h4 class="mb-0">{{ top_product }}</h4>
-                </div>
-                <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
-                  <i class="material-symbols-rounded opacity-10">star</i>
-                </div>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-2 ps-3">
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6">
-          <div class="card">
-            <div class="card-header p-2 ps-3">
-              <div class="d-flex justify-content-between">
-                <div>
-                  <p class="text-sm mb-0 text-capitalize">Total Pendapatan</p>
-                  <h4 class="mb-0">Rp {{ "{:,.0f}".format(total_pendapatan) }}</h4>
-                </div>
-                <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
-                  <i class="material-symbols-rounded opacity-10">paid</i>
-                </div>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-2 ps-3">
-            </div>
+          <div class="d-flex gap-3">
+            <button class="btn btn-light btn-lg px-4 py-3 fw-bold" style="color: #2e7d32;">
+              <i class="material-symbols-rounded me-2">insights</i>
+              Lihat Analisis
+            </button>
+            <button class="btn btn-outline-light btn-lg px-4 py-3">
+              <i class="material-symbols-rounded me-2">download</i>
+              Export Laporan
+            </button>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-6 col-md-6 mt-4 mb-4">
-          <div class="card">
-            <div class="card-body">
-              <h6 class="mb-0 ">Website Views</h6>
-              <p class="text-sm ">Last Campaign Performance</p>
-              <div class="pe-2">
-                <div class="chart">
-                  <canvas id="chart-bars" class="chart-canvas" height="300"></canvas>
-                </div>
-              </div>
-              <hr class="dark horizontal">
-              <div class="d-flex ">
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6 col-md-6 mt-4 mb-4">
-          <div class="card ">
-            <div class="card-body">
-              <h6 class="mb-0 "> Daily Sales </h6>
-              <p class="text-sm "> (<span class="font-weight-bolder">+15%</span>) increase in today sales. </p>
-              <div class="pe-2">
-                <div class="chart">
-                  <canvas id="chart-line" class="chart-canvas" height="300"></canvas>
-                </div>
-              </div>
-              <hr class="dark horizontal">
-              <div class="d-flex ">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {% include "includes/footer.html" %}
     </div>
+  </div>
 
-  {% endblock content %}
+  <!-- Scroll Indicator -->
+  <div class="scroll-indicator position-absolute bottom-0 start-50 translate-middle-x mb-4">
+    <div class="d-flex flex-column align-items-center text-white">
+      <span class="mb-2">Scroll untuk melihat dashboard</span>
+      <i class="material-symbols-rounded animate-bounce">keyboard_arrow_down</i>
+    </div>
+  </div>
+</div>
 
-  {% block extra_js %}
+<!-- Main Dashboard Content -->
+<div class="container-fluid py-5" style="background: linear-gradient(135deg, #f8fdf8 0%, #ffffff 100%);">
   
-  <script src="{{ url_for('static', filename='assets/js/plugins/chartjs.min.js') }}"></script>
-  <script>
-    var ctx = document.getElementById("chart-bars").getContext("2d");
+  <!-- Quick Stats -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <h2 class="mb-4 fw-bold" style="font-family: 'Georgia', serif; color: #2e7d32;">Ringkasan Performa</h2>
+    </div>
+    
+    <!-- Total Products -->
+    <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+      <div class="card stats-card border-0 shadow-lg h-100 hover-lift">
+        <div class="card-body text-center p-4">
+          <div class="icon-wrapper mb-3">
+            <div class="icon-circle bg-success bg-opacity-10">
+              <i class="material-symbols-rounded text-success">inventory_2</i>
+            </div>
+          </div>
+          <h3 class="fw-bold text-success mb-1">{{ total_products | default(0) }}</h3>
+          <p class="text-muted mb-0">Total Produk</p>
+          <small class="text-success">+5% dari bulan lalu</small>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Total Orders -->
+    <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+      <div class="card stats-card border-0 shadow-lg h-100 hover-lift">
+        <div class="card-body text-center p-4">
+          <div class="icon-wrapper mb-3">
+            <div class="icon-circle bg-warning bg-opacity-10">
+              <i class="material-symbols-rounded text-warning">shopping_cart</i>
+            </div>
+          </div>
+          <h3 class="fw-bold text-warning mb-1">{{ total_orders | default(0) }}</h3>
+          <p class="text-muted mb-0">Total Orders</p>
+          <small class="text-success">+12% dari bulan lalu</small>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Total Pendapatan -->
+    <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+      <div class="card stats-card border-0 shadow-lg h-100 hover-lift">
+        <div class="card-body text-center p-4">
+          <div class="icon-wrapper mb-3">
+            <div class="icon-circle bg-info bg-opacity-10">
+              <i class="material-symbols-rounded text-info">payments</i>
+            </div>
+          </div>
+          <h3 class="fw-bold text-info mb-1">Rp {{ "{:,.0f}".format(total_pendapatan | default(0)) }}</h3>
+          <p class="text-muted mb-0">Total Pendapatan</p>
+          <small class="text-success">+8% dari bulan lalu</small>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Total Berat Terjual -->
+    <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+      <div class="card stats-card border-0 shadow-lg h-100 hover-lift">
+        <div class="card-body text-center p-4">
+          <div class="icon-wrapper mb-3">
+            <div class="icon-circle bg-primary bg-opacity-10">
+              <i class="material-symbols-rounded text-primary">scale</i>
+            </div>
+          </div>
+          <h3 class="fw-bold text-primary mb-1">{{ total_berat_terjual | default(0) }} kg</h3>
+          <p class="text-muted mb-0">Berat Terjual</p>
+          <small class="text-success">+15% dari bulan lalu</small>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Average Order Value -->
+    <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+      <div class="card stats-card border-0 shadow-lg h-100 hover-lift">
+        <div class="card-body text-center p-4">
+          <div class="icon-wrapper mb-3">
+            <div class="icon-circle bg-danger bg-opacity-10">
+              <i class="material-symbols-rounded text-danger">trending_up</i>
+            </div>
+          </div>
+          {% set avg_order = (total_pendapatan | default(0) / total_orders | default(1)) if total_orders | default(0) > 0 else 0 %}
+          <h3 class="fw-bold text-danger mb-1">Rp {{ "{:,.0f}".format(avg_order) }}</h3>
+          <p class="text-muted mb-0">Rata-rata Order</p>
+          <small class="text-success">+3% dari bulan lalu</small>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Conversion Rate -->
+    <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+      <div class="card stats-card border-0 shadow-lg h-100 hover-lift">
+        <div class="card-body text-center p-4">
+          <div class="icon-wrapper mb-3">
+            <div class="icon-circle bg-purple bg-opacity-10">
+              <i class="material-symbols-rounded text-purple">conversion_path</i>
+            </div>
+          </div>
+          <h3 class="fw-bold text-purple mb-1">4.2%</h3>
+          <p class="text-muted mb-0">Conversion Rate</p>
+          <small class="text-success">+0.5% dari bulan lalu</small>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: ["M", "T", "W", "T", "F", "S", "S"],
-        datasets: [{
-          label: "Views",
-          tension: 0.4,
-          borderWidth: 0,
-          borderRadius: 4,
-          borderSkipped: false,
-          backgroundColor: "#43A047",
-          data: [50, 45, 22, 28, 50, 60, 76],
-          barThickness: 'flex'
-        }, ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [5, 5],
-              color: '#e5e5e5'
-            },
-            ticks: {
-              suggestedMin: 0,
-              suggestedMax: 500,
-              beginAtZero: true,
-              padding: 10,
-              font: {
-                size: 14,
-                lineHeight: 2
-              },
-              color: "#737373"
-            },
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-              borderDash: [5, 5]
-            },
-            ticks: {
-              display: true,
-              color: '#737373',
-              padding: 10,
-              font: {
-                size: 14,
-                lineHeight: 2
-              },
-            }
-          },
-        },
-      },
-    });
+  <!-- Charts & Analytics Section -->
+  <div class="row">
+    
+    <!-- Sales Trend Chart -->
+    <div class="col-lg-8 mb-4">
+      <div class="card border-0 shadow-lg h-100">
+        <div class="card-header bg-transparent border-0 py-4">
+          <h4 class="mb-0 fw-bold" style="font-family: 'Georgia', serif; color: #2e7d32;">
+            <i class="material-symbols-rounded me-2">trending_up</i>
+            Tren Penjualan 30 Hari Terakhir
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="chart-container" style="height: 300px;">
+            <canvas id="salesTrendChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Top Products -->
+    <div class="col-lg-4 mb-4">
+      <div class="card border-0 shadow-lg h-100">
+        <div class="card-header bg-transparent border-0 py-4">
+          <h4 class="mb-0 fw-bold" style="font-family: 'Georgia', serif; color: #2e7d32;">
+            <i class="material-symbols-rounded me-2">star</i>
+            Produk Terlaris
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="top-products-list">
+            {% if top_products %}
+              {% for product in top_products %}
+              <div class="product-item d-flex align-items-center mb-3 p-3 rounded hover-lift">
+                <div class="product-image me-3">
+                  <img src="{{ product.image or 'https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80' }}" 
+                       alt="{{ product.name }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                </div>
+                <div class="product-info flex-grow-1">
+                  <h6 class="mb-1 fw-bold">{{ product.name }}</h6>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted small">{{ product.quantity }} terjual</span>
+                    <span class="badge bg-success">Rp {{ "{:,.0f}".format(product.revenue) }}</span>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            {% else %}
+              <!-- Fallback data jika top_products tidak tersedia -->
+              {% set default_products = [
+                {'name': 'Bayam Organik', 'quantity': 150, 'revenue': 7500000, 'image': 'https://images.unsplash.com/photo-1574856344991-aaa31b6f4ce3?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80'},
+                {'name': 'Wortel Segar', 'quantity': 120, 'revenue': 6000000, 'image': 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80'},
+                {'name': 'Brokoli Hijau', 'quantity': 95, 'revenue': 4750000, 'image': 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80'},
+                {'name': 'Kangkung Segar', 'quantity': 85, 'revenue': 4250000, 'image': 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80'}
+              ] %}
+              {% for product in default_products %}
+              <div class="product-item d-flex align-items-center mb-3 p-3 rounded hover-lift">
+                <div class="product-image me-3">
+                  <img src="{{ product.image }}" 
+                       alt="{{ product.name }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                </div>
+                <div class="product-info flex-grow-1">
+                  <h6 class="mb-1 fw-bold">{{ product.name }}</h6>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted small">{{ product.quantity }} terjual</span>
+                    <span class="badge bg-success">Rp {{ "{:,.0f}".format(product.revenue) }}</span>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Additional Analytics -->
+  <div class="row mt-4">
+    
+    <!-- Kategori Distribution -->
+    <div class="col-lg-4 mb-4">
+      <div class="card border-0 shadow-lg h-100">
+        <div class="card-header bg-transparent border-0 py-4">
+          <h4 class="mb-0 fw-bold" style="font-family: 'Georgia', serif; color: #2e7d32;">
+            <i class="material-symbols-rounded me-2">category</i>
+            Distribusi Kategori
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="chart-container" style="height: 250px;">
+            <canvas id="categoryChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Status Orders -->
+    <div class="col-lg-4 mb-4">
+      <div class="card border-0 shadow-lg h-100">
+        <div class="card-header bg-transparent border-0 py-4">
+          <h4 class="mb-0 fw-bold" style="font-family: 'Georgia', serif; color: #2e7d32;">
+            <i class="material-symbols-rounded me-2">pending_actions</i>
+            Status Orders
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="chart-container" style="height: 250px;">
+            <canvas id="statusChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="col-lg-4 mb-4">
+      <div class="card border-0 shadow-lg h-100">
+        <div class="card-header bg-transparent border-0 py-4">
+          <h4 class="mb-0 fw-bold" style="font-family: 'Georgia', serif; color: #2e7d32;">
+            <i class="material-symbols-rounded me-2">history</i>
+            Aktivitas Terbaru
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="activity-timeline">
+            <div class="activity-item mb-3">
+              <div class="d-flex">
+                <div class="activity-icon me-3">
+                  <i class="material-symbols-rounded text-success">add_shopping_cart</i>
+                </div>
+                <div class="activity-content">
+                  <h6 class="mb-1">Order Baru #{{ (total_orders | default(0)) + 1 }}</h6>
+                  <p class="text-muted small mb-0">Customer: Budi Santoso - Rp 450,000</p>
+                  <small class="text-muted">2 menit yang lalu</small>
+                </div>
+              </div>
+            </div>
+            <div class="activity-item mb-3">
+              <div class="d-flex">
+                <div class="activity-icon me-3">
+                  <i class="material-symbols-rounded text-warning">inventory</i>
+                </div>
+                <div class="activity-content">
+                  <h6 class="mb-1">Stok Diperbarui</h6>
+                  <p class="text-muted small mb-0">Bayam Organik +500kg</p>
+                  <small class="text-muted">1 jam yang lalu</small>
+                </div>
+              </div>
+            </div>
+            <div class="activity-item mb-3">
+              <div class="d-flex">
+                <div class="activity-icon me-3">
+                  <i class="material-symbols-rounded text-info">local_shipping</i>
+                </div>
+                <div class="activity-content">
+                  <h6 class="mb-1">Pengiriman Selesai</h6>
+                  <p class="text-muted small mb-0">Order #{{ total_orders | default(0) }} dikirim ke Jakarta</p>
+                  <small class="text-muted">3 jam yang lalu</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    var ctx2 = document.getElementById("chart-line").getContext("2d");
+  <!-- Product Gallery -->
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="card border-0 shadow-lg">
+        <div class="card-header bg-transparent border-0 py-4">
+          <h4 class="mb-0 fw-bold" style="font-family: 'Georgia', serif; color: #2e7d32;">
+            <i class="material-symbols-rounded me-2">collections</i>
+            Galeri Produk Unggulan
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row g-4">
+            {% if top_products %}
+              {% for product in top_products[:4] %}
+              <div class="col-lg-3 col-md-6">
+                <div class="product-card card border-0 shadow-sm h-100 hover-lift">
+                  <div class="product-image position-relative overflow-hidden">
+                    <img src="{{ product.image or 'https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' }}" 
+                         class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                    <div class="product-badge position-absolute top-0 end-0 m-3">
+                      <span class="badge bg-success">Terlaris</span>
+                    </div>
+                  </div>
+                  <div class="card-body text-center">
+                    <h5 class="card-title fw-bold" style="color: #2e7d32;">{{ product.name }}</h5>
+                    <p class="card-text text-muted">{{ product.description or 'Produk organik berkualitas tinggi' }}</p>
+                    <div class="product-stats">
+                      <div class="d-flex justify-content-between text-center">
+                        <div>
+                          <h6 class="fw-bold text-success mb-0">{{ product.quantity }}</h6>
+                          <small class="text-muted">Terjual</small>
+                        </div>
+                        <div>
+                          <h6 class="fw-bold text-primary mb-0">Rp {{ "{:,.0f}".format(product.revenue) }}</h6>
+                          <small class="text-muted">Pendapatan</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            {% else %}
+              <!-- Fallback product gallery -->
+              {% set default_gallery = [
+                {'name': 'Bayam Organik', 'quantity': 150, 'revenue': 7500000, 'image': 'https://images.unsplash.com/photo-1574856344991-aaa31b6f4ce3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80', 'description': 'Bayam segar hasil panen organik'},
+                {'name': 'Wortel Segar', 'quantity': 120, 'revenue': 6000000, 'image': 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80', 'description': 'Wortel manis dan renyah'},
+                {'name': 'Brokoli Hijau', 'quantity': 95, 'revenue': 4750000, 'image': 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80', 'description': 'Brokoli hijau kaya nutrisi'},
+                {'name': 'Kangkung Segar', 'quantity': 85, 'revenue': 4250000, 'image': 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80', 'description': 'Kangkung segar siap masak'}
+              ] %}
+              {% for product in default_gallery %}
+              <div class="col-lg-3 col-md-6">
+                <div class="product-card card border-0 shadow-sm h-100 hover-lift">
+                  <div class="product-image position-relative overflow-hidden">
+                    <img src="{{ product.image }}" 
+                         class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                    <div class="product-badge position-absolute top-0 end-0 m-3">
+                      <span class="badge bg-success">Terlaris</span>
+                    </div>
+                  </div>
+                  <div class="card-body text-center">
+                    <h5 class="card-title fw-bold" style="color: #2e7d32;">{{ product.name }}</h5>
+                    <p class="card-text text-muted">{{ product.description }}</p>
+                    <div class="product-stats">
+                      <div class="d-flex justify-content-between text-center">
+                        <div>
+                          <h6 class="fw-bold text-success mb-0">{{ product.quantity }}</h6>
+                          <small class="text-muted">Terjual</small>
+                        </div>
+                        <div>
+                          <h6 class="fw-bold text-primary mb-0">Rp {{ "{:,.0f}".format(product.revenue) }}</h6>
+                          <small class="text-muted">Pendapatan</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    new Chart(ctx2, {
-      type: "line",
-      data: {
-        labels: ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
-        datasets: [{
-          label: "Sales",
-          tension: 0,
-          borderWidth: 2,
-          pointRadius: 3,
-          pointBackgroundColor: "#43A047",
-          pointBorderColor: "transparent",
-          borderColor: "#43A047",
-          backgroundColor: "transparent",
-          fill: true,
-          data: [120, 230, 130, 440, 250, 360, 270, 180, 90, 300, 310, 220],
-          maxBarThickness: 6
-
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          },
-          tooltip: {
-            callbacks: {
-              title: function(context) {
-                const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                return fullMonths[context[0].dataIndex];
-              }
-            }
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [4, 4],
-              color: '#e5e5e5'
-            },
-            ticks: {
-              display: true,
-              color: '#737373',
-              padding: 10,
-              font: {
-                size: 12,
-                lineHeight: 2
-              },
-            }
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-              borderDash: [5, 5]
-            },
-            ticks: {
-              display: true,
-              color: '#737373',
-              padding: 10,
-              font: {
-                size: 12,
-                lineHeight: 2
-              },
-            }
-          },
-        },
-      },
-    });
-
-    var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
-
-    new Chart(ctx3, {
-      type: "line",
-      data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [{
-          label: "Tasks",
-          tension: 0,
-          borderWidth: 2,
-          pointRadius: 3,
-          pointBackgroundColor: "#43A047",
-          pointBorderColor: "transparent",
-          borderColor: "#43A047",
-          backgroundColor: "transparent",
-          fill: true,
-          data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-          maxBarThickness: 6
-
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [4, 4],
-              color: '#e5e5e5'
-            },
-            ticks: {
-              display: true,
-              padding: 10,
-              color: '#737373',
-              font: {
-                size: 14,
-                lineHeight: 2
-              },
-            }
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-              borderDash: [4, 4]
-            },
-            ticks: {
-              display: true,
-              color: '#737373',
-              padding: 10,
-              font: {
-                size: 14,
-                lineHeight: 2
-              },
-            }
-          },
-        },
-      },
-    });
-  </script>
+<style>
+  /* Custom Styles */
+  .hero-section {
+    background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+  }
   
+  .hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .hero-background .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+  }
+  
+  .hero-background .slide.active {
+    opacity: 0.9;
+  }
+  
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(46, 125, 50, 0.9) 0%, rgba(76, 175, 80, 0.7) 100%);
+  }
+  
+  .hero-content {
+    z-index: 2;
+  }
+  
+  .stats-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .stats-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+  
+  .icon-circle i {
+    font-size: 24px;
+  }
+  
+  .hover-lift {
+    transition: transform 0.3s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+  
+  .animate-bounce {
+    animation: bounce 2s infinite;
+  }
+  
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-10px);
+    }
+    60% {
+      transform: translateY(-5px);
+    }
+  }
+  
+  .bg-purple {
+    background-color: #6f42c1 !important;
+  }
+  
+  .text-purple {
+    color: #6f42c1 !important;
+  }
+  
+  .product-item {
+    transition: background-color 0.3s ease;
+  }
+  
+  .product-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+  }
+</style>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='assets/js/plugins/chartjs.min.js') }}"></script>
+<script>
+  // Background Slideshow
+  document.addEventListener('DOMContentLoaded', function() {
+    const slides = document.querySelectorAll('.hero-background .slide');
+    let currentSlide = 0;
+    
+    function showSlide(index) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      slides[index].classList.add('active');
+    }
+    
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }
+    
+    // Change slide every 5 seconds
+    setInterval(nextSlide, 5000);
+    
+    // Initialize first slide
+    showSlide(0);
+  });
+
+  // Sales Trend Chart
+  const salesTrendCtx = document.getElementById('salesTrendChart').getContext('2d');
+  const salesTrendChart = new Chart(salesTrendCtx, {
+    type: 'line',
+    data: {
+      labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30'],
+      datasets: [{
+        label: 'Pendapatan (Rp)',
+        data: [4500000, 5200000, 4800000, 6100000, 5500000, 7200000, 6800000, 5900000, 6300000, 7100000, 6500000, 5800000, 6200000, 6900000, 7400000, 6700000, 7100000, 7800000, 8200000, 7600000, 7900000, 8500000, 8100000, 8800000, 9200000, 8700000, 9100000, 9500000, 9800000, 10200000],
+        borderColor: '#2e7d32',
+        backgroundColor: 'rgba(46, 125, 50, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#2e7d32',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: function(context) {
+              return `Rp ${context.raw.toLocaleString()}`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.1)'
+          },
+          ticks: {
+            callback: function(value) {
+              return 'Rp ' + (value / 1000000).toFixed(0) + 'Jt';
+            }
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      }
+    }
+  });
+
+  // Category Distribution Chart
+  const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+  const categoryChart = new Chart(categoryCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Sayuran Hijau', 'Buah-buahan', 'Umbi-umbian', 'Bumbu Dapur', 'Lainnya'],
+      datasets: [{
+        data: [35, 25, 20, 15, 5],
+        backgroundColor: [
+          '#2e7d32', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b'
+        ],
+        borderWidth: 2,
+        borderColor: '#ffffff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            padding: 20,
+            usePointStyle: true
+          }
+        }
+      },
+      cutout: '60%'
+    }
+  });
+
+  // Status Orders Chart
+  const statusCtx = document.getElementById('statusChart').getContext('2d');
+  const statusChart = new Chart(statusCtx, {
+    type: 'pie',
+    data: {
+      labels: ['Selesai', 'Diproses', 'Dikirim', 'Pending', 'Dibatalkan'],
+      datasets: [{
+        data: [45, 25, 15, 10, 5],
+        backgroundColor: [
+          '#2e7d32', '#4caf50', '#8bc34a', '#ffc107', '#f44336'
+        ],
+        borderWidth: 2,
+        borderColor: '#ffffff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            padding: 20,
+            usePointStyle: true
+          }
+        }
+      }
+    }
+  });
+
+  // Smooth scroll to dashboard
+  document.querySelector('.scroll-indicator').addEventListener('click', function() {
+    document.querySelector('.container-fluid').scrollIntoView({ 
+      behavior: 'smooth' 
+    });
+  });
+</script>
 {% endblock extra_js %}

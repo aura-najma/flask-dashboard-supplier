@@ -1,8 +1,53 @@
-{% extends "layouts/base.html" %}
+{% extends "layouts/base.html" %} {% block title %}Pesanan Masuk{% endblock
+title %} {% block content %}
+<style>
+  .btn-shine {
+    /* Tampilan dasar Neumorphism terangkat */
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #3a3a3a;
+    text-decoration: none;
+    display: inline-block;
+    background-color: #eef1f5;
+    box-shadow: 4px 4px 8px #c5c8cb, -4px -4px 8px #ffffff;
+    transition: all 0.2s ease-in-out;
 
-{% block title %}Pesanan Masuk{% endblock title %}
+    /* Persiapan untuk efek shining */
+    position: relative;
+    overflow: hidden;
+  }
 
-{% block content %}
+  .btn-shine:active {
+    /* Efek tertekan saat diklik */
+    box-shadow: inset 4px 4px 8px #c5c8cb, inset -4px -4px 8px #ffffff;
+  }
+
+  /* Efek Shining dengan pseudo-element */
+  .btn-shine::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%; /* Mulai dari luar tombol di kiri */
+    width: 80%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(255, 255, 255, 0.6),
+      transparent
+    );
+    transform: skewX(-25deg); /* Efek kilatan miring */
+    transition: left 0.7s ease-in-out;
+  }
+
+  .btn-shine:hover::before {
+    left: 150%; /* Bergerak ke kanan hingga keluar tombol */
+  }
+</style>
+
 <div class="container-fluid py-2">
   <div class="row">
     <div class="col-12">
@@ -18,37 +63,92 @@
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Order</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Produk</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Supplier</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pemesan</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Asal Pemesan</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jumlah</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Order</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status Order</th>
+                  <th
+                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  >
+                    ID Order
+                  </th>
+                  <th
+                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  >
+                    ID Produk
+                  </th>
+                  <th
+                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  >
+                    ID Supplier
+                  </th>
+                  <th
+                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  >
+                    Nama Pemesan
+                  </th>
+                  <th
+                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  >
+                    Asal Pemesan
+                  </th>
+                  <th
+                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  >
+                    Jumlah
+                  </th>
+                  <th
+                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  >
+                    Tanggal Order
+                  </th>
+                  <th
+                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  >
+                    Status Order
+                  </th>
                 </tr>
               </thead>
 
-            <tbody>
-              {% for order, detail in data %}
-              <tr>
-                <td>{{ order.id_order }}</td>
-                <td>{{ detail.id_product }}</td>
-                <td>{{ detail.id_supplier }}</td>
-                <td>{{ order.nama_pemesan }}</td>
-                <td>{{ order.asal_pemesan }}</td>
-                <td>{{ detail.jumlah }}</td>
-                <td>{{ order.tanggal_order.strftime('%Y-%m-%d') if order.tanggal_order else '-' }}</td>
-                <td>{{ order.status_order or '-' }}</td>
-              </tr>
-              {% else %}
-              <tr>
-                <td colspan="8" class="text-center text-muted">Belum ada data pesanan</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-
-
+              <tbody>
+                {% for order, detail in data %}
+                <tr>
+                  <td class="align-middle text-center text-sm">
+                    {{ order.id_order }}
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    {{ detail.id_product }}
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    {{ detail.id_supplier }}
+                  </td>
+                  <td class="align-middle text-sm">{{ order.nama_pemesan }}</td>
+                  <td class="align-middle text-sm">{{ order.asal_pemesan }}</td>
+                  <td class="align-middle text-center text-sm">
+                    {{ detail.kuantitas }}
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    {{ order.tanggal_order.strftime('%Y-%m-%d') if
+                    order.tanggal_order else '-' }}
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    <span class="badge badge-sm bg-gradient-success"
+                      >{{ order.status_order or '-' }}</span
+                    >
+                  </td>
+                  <td class="align-middle text-center">
+                    <a
+                      href="{{ url_for('home_blueprint.detail_shipments', id=order.id_order) }}"
+                      class="btn-shine"
+                    >
+                      Lihat Detail
+                    </a>
+                  </td>
+                </tr>
+                {% else %}
+                <tr>
+                  <td colspan="8" class="text-center text-muted">
+                    Belum ada data pesanan
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
             </table>
           </div>
         </div>

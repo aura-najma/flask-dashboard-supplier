@@ -291,35 +291,13 @@
 
 <div class="container-fluid py-2">
   <div class="view-product-body">
-    <div class="product-detail-container">
+    <div class="product-detail-container" style="grid-template-columns: 1.2fr 2fr;">
       <div class="image-gallery">
         <div class="main-image">
           <img
             id="main-product-image"
             src="{{ product.gambar or 'https://via.placeholder.com/600' }}"
             alt="{{ product.nama_product }}"
-          />
-        </div>
-        <div class="thumbnail-images">
-          <img
-            class="thumbnail active"
-            src="{{ product.gambar or 'https://via.placeholder.com/150' }}"
-            alt="Thumbnail 1"
-          />
-          <img
-            class="thumbnail"
-            src="https://via.placeholder.com/150/EEEEEE/808080?Text=Img_2"
-            alt="Thumbnail 2"
-          />
-          <img
-            class="thumbnail"
-            src="https://via.placeholder.com/150/DDDDDD/808080?Text=Img_3"
-            alt="Thumbnail 3"
-          />
-          <img
-            class="thumbnail"
-            src="https://via.placeholder.com/150/CCCCCC/808080?Text=Img_4"
-            alt="Thumbnail 4"
           />
         </div>
       </div>
@@ -330,57 +308,32 @@
           Rp {{ "{:,.0f}".format(product.harga) }}
         </div>
 
+        <!-- Tambahan stok tersisa -->
+        <p style="font-weight:500;color:#444;">Stok tersisa: {{ product.stok }}</p>
+
         <div class="details-tabs">
           <button class="tab-btn active">Detail</button>
-          <button class="tab-btn">Info Supplier</button>
         </div>
+
         <div class="details-content">
           <p><strong>Kategori:</strong> {{ product.kategori }}</p>
-          <p>
-            <strong>Berat:</strong> {{ product.berat }} {{ product.satuan }}
-          </p>
+          <p><strong>Berat:</strong> {{ product.berat }} kg</p>
+          <p><strong>Satuan:</strong> {{ product.satuan }}</p>
           <p><strong>Tanggal Masuk:</strong> {{ product.tanggal_masuk }}</p>
           <p>{{ product.deskripsi }}</p>
-          {% if supplier %}
-          <div class="supplier-info" style="display: none">
-            <p><strong>Nama Supplier:</strong> {{ supplier.nama_supplier }}</p>
-            <p><strong>Kontak:</strong> {{ supplier.kontak_supplier }}</p>
-            <p><strong>Alamat:</strong> {{ supplier.alamat_supplier }}</p>
-          </div>
-          {% endif %}
+        <div style="margin-top: 2rem;">
+          <a href="{{ url_for('home_blueprint.products') }}" class="btn-secondary">
+            <i class="fas fa-arrow-left"></i> Kembali ke Daftar Produk
+          </a>
+        </div>
         </div>
       </div>
-
-      <aside class="purchase-box">
-        <h2 class="purchase-title">Stok dan Harga Produk</h2>
-        <div class="selected-product">
-          <img
-            src="{{ product.gambar or 'https://via.placeholder.com/80' }}"
-            alt="Selected Product"
-          />
-          <p>{{ product.nama_product }}</p>
-        </div>
-        <div class="quantity-selector">
-          <span class="stock-info"
-            >Stok: <strong>{{ product.stok }}</strong></span
-          >
-        </div>
-        <div class="subtotal">
-          <span>Harga</span>
-          <span class="subtotal-price" id="subtotal-price"
-            >Rp {{ "{:,.0f}".format(product.harga) }}</span
-          >
-        </div>
-        <div class="action-links">
-          <a href="#"><i class="fas fa-comment-dots"></i> Chat</a>
-          <a href="#"><i class="fas fa-heart"></i> Wishlist</a>
-          <a href="#"><i class="fas fa-share-alt"></i> Share</a>
-        </div>
-      </aside>
     </div>
   </div>
+
   {% include "includes/footer.html" %}
 </div>
+
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {

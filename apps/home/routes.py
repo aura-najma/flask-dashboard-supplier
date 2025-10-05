@@ -32,17 +32,17 @@ def index():
 
     # Produk Terlaris (Top Product)
     top_product_query = (
-        db.session.query(Product.nama_product, func.sum(OrderDetail.jumlah).label('total_terjual'))
+        db.session.query(Product.nama_product, func.sum(OrderDetail.kuantitas).label('total_terjual'))
         .join(OrderDetail, OrderDetail.id_product == Product.id_product)
         .group_by(Product.id_product)
-        .order_by(func.sum(OrderDetail.jumlah).desc())
+        .order_by(func.sum(OrderDetail.kuantitas).desc())
         .first()
     )
     top_product = top_product_query.nama_product if top_product_query else "Belum Ada Order"
 
     # Total Pendapatan (harga * jumlah)
     total_pendapatan_query = (
-        db.session.query(func.sum(Product.harga * OrderDetail.jumlah))
+        db.session.query(func.sum(Product.harga * OrderDetail.kuantitas))
         .join(OrderDetail, OrderDetail.id_product == Product.id_product)
         .scalar()
     )
@@ -217,6 +217,7 @@ def view_product(id):
         'product': product,
         'supplier': supplier
     }
+    print("DEBUG SUPPLIER:", product.id_supplier, supplier)
 
     # 4️⃣ Render ke halaman detail
     return render_template('pages/view_product.html', **context)
@@ -235,7 +236,6 @@ def orders():
     }
     return render_template('pages/orders.html', **context)
 
-
 # 🚚 PENGIRIMAN
 @blueprint.route('/shipments')
 @login_required
@@ -248,6 +248,22 @@ def shipments():
     }
     return render_template('pages/shipments.html', **context)
 
+# 🚚 PENGIRIMAN (lanjutan)
+@blueprint.route('/shipments/detail/<int:id>')
+@login_required
+def detail_shipments(id):
+    # Ambil data pesanan berdasarkan ID yang diklik
+    order = Orders.query.get_or_404(id)
+    
+    # Semua data terkait (seperti order_details dan shipment) sudah bisa diakses
+    # melalui relasi yang didefinisikan di models.py
+    
+    context = {
+        'segment': 'orders', # Agar menu 'Pesanan' tetap aktif
+        'title': f'Detail Pesanan #{order.id_order}',
+        'order': order
+    }
+    return render_template('pages/detail_shipments.html', **context)
 # 👤 PROFIL SUPPLIER
 @blueprint.route('/profile', methods=['GET', 'POST'])
 @login_required

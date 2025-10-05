@@ -24,16 +24,19 @@ class ProfileForm(FlaskForm):
 
 # 🏠 DASHBOARD
 @blueprint.route('/')
+
+# 🏠 DASHBOARD
+@blueprint.route('/')
 @blueprint.route('/index')
 @login_required
 def index():
-    # Total Produk
+    # === 1️⃣ Total Produk ===
     total_products = Product.query.count()
 
-    # Total Order
+    # === 2️⃣ Total Order ===
     total_orders = Orders.query.count()
 
-    # Produk Terlaris (Top Product)
+    # === 3️⃣ Produk Terlaris ===
     top_product_query = (
         db.session.query(Product.nama_product, func.sum(OrderDetail.kuantitas).label('total_terjual'))
         .join(OrderDetail, OrderDetail.id_product == Product.id_product)
@@ -43,7 +46,7 @@ def index():
     )
     top_product = top_product_query.nama_product if top_product_query else "Belum Ada Order"
 
-    # Total Pendapatan (harga * jumlah)
+    # === 4️⃣ Total Pendapatan (harga × jumlah terjual) ===
     total_pendapatan_query = (
         db.session.query(func.sum(Product.harga * OrderDetail.kuantitas))
         .join(OrderDetail, OrderDetail.id_product == Product.id_product)
@@ -51,14 +54,69 @@ def index():
     )
     total_pendapatan = total_pendapatan_query if total_pendapatan_query else 0
 
-    # Context untuk template
+    # === 5️⃣ Distribusi Kategori dari tabel Product ===
+    kategori_data = (
+        db.session.query(
+            Product.kategori,
+            func.count(Product.id_product).label('jumlah')
+        )
+        .filter(Product.kategori.isnot(None))
+        .group_by(Product.kategori)
+        .order_by(func.count(Product.id_product).desc())
+        .all()
+    )
+
+    kategori_labels = [row.kategori for row in kategori_data]
+    kategori_values = [row.jumlah for row in kategori_data]
+
+    # === 6️⃣ Distribusi Status Order dari tabel Orders ===
+    status_data = (
+        db.session.query(Orders.status_order, func.count(Orders.id_order).label('jumlah'))
+        .group_by(Orders.status_order)
+        .all()
+    )
+
+    status_labels = [row.status_order for row in status_data]
+    status_values = [row.jumlah for row in status_data]
+
+    # === 7️⃣ Daftar Produk Terlaris (Top 5) dengan Revenue ===
+    top_products_data = (
+        db.session.query(
+            Product.nama_product, 
+            Product.gambar,
+            func.sum(OrderDetail.kuantitas).label('total_terjual'),
+            func.sum(Product.harga * OrderDetail.kuantitas).label('revenue')
+        )
+        .join(OrderDetail, OrderDetail.id_product == Product.id_product)
+        .group_by(Product.id_product, Product.nama_product, Product.gambar)
+        .order_by(func.sum(OrderDetail.kuantitas).desc())
+        .limit(5)
+        .all()
+    )
+
+    # Format data top products untuk template
+    top_products = []
+    for product in top_products_data:
+        top_products.append({
+            'name': product.nama_product,
+            'image': product.gambar,
+            'quantity': int(product.total_terjual or 0),
+            'revenue': float(product.revenue or 0)
+        })
+
+    # === 8️⃣ Kirim data ke template ===
     context = {
         'segment': 'dashboard',
         'title': 'Dashboard Supplier',
         'total_products': total_products,
         'total_orders': total_orders,
         'top_product': top_product,
-        'total_pendapatan': total_pendapatan
+        'total_pendapatan': total_pendapatan,
+        'kategori_labels': kategori_labels,
+        'kategori_values': kategori_values,
+        'status_labels': status_labels,
+        'status_values': status_values,
+        'top_products': top_products
     }
 
     return render_template('pages/index.html', **context)

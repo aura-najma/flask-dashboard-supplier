@@ -274,47 +274,43 @@ def view_product(id):
 @blueprint.route('/orders')
 @login_required
 def orders():
+    # Ambil nomor halaman dari query string (?page=)
     page = request.args.get('page', 1, type=int)
-    per_page = 10  # jumlah data per halaman
 
-    # Total data di tabel orders
-    total_data = Orders.query.count()
-
-    # Ambil orders untuk halaman saat ini
-    orders = (
+    # Ambil data orders secara paginated (10 per halaman)
+    orders_pagination = (
         Orders.query
-        .order_by(Orders.id_order.asc())  # urut dari kecil ke besar
-        .limit(per_page)
-        .offset((page - 1) * per_page)
-        .all()
+        .order_by(Orders.id_order.asc())
+        .paginate(page=page, per_page=10)
     )
 
-    # Ambil semua detail order untuk orders di halaman ini
+    # Ambil hanya item di halaman ini
+    orders = orders_pagination.items
+
+    # Ambil semua detail untuk order di halaman ini
     order_ids = [o.id_order for o in orders]
     order_details = (
         OrderDetail.query.filter(OrderDetail.id_order.in_(order_ids)).all()
         if order_ids else []
     )
 
-    # Gabungkan semua detail per order (list)
+    # Gabungkan detail per order
     details_dict = defaultdict(list)
     for d in order_details:
         details_dict[d.id_order].append(d)
 
+    # Bentuk pasangan (order, details)
     data = [(o, details_dict.get(o.id_order, [])) for o in orders]
 
-    total_pages = ceil(total_data / per_page)
-
+    # Kirim data ke template
     context = {
         'segment': 'orders',
         'title': 'Pesanan Masuk',
         'data': data,
-        'page': page,
-        'total_pages': total_pages
+        'orders': orders_pagination  # ✅ penting untuk pagination HTML
     }
 
     return render_template('pages/orders.html', **context)
-
 # 🚚 PENGIRIMAN
 @blueprint.route('/shipments')
 @login_required

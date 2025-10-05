@@ -1,8 +1,9 @@
-{% extends "layouts/base.html" %} {% block title %}Pesanan Masuk{% endblock
-title %} {% block content %}
+{% extends "layouts/base.html" %} 
+{% block title %}Pesanan Masuk{% endblock title %} 
+{% block content %}
+
 <style>
   .btn-shine {
-    /* Tampilan dasar Neumorphism terangkat */
     padding: 8px 16px;
     border-radius: 10px;
     border: none;
@@ -14,23 +15,17 @@ title %} {% block content %}
     background-color: #eef1f5;
     box-shadow: 4px 4px 8px #c5c8cb, -4px -4px 8px #ffffff;
     transition: all 0.2s ease-in-out;
-
-    /* Persiapan untuk efek shining */
     position: relative;
     overflow: hidden;
   }
-
   .btn-shine:active {
-    /* Efek tertekan saat diklik */
     box-shadow: inset 4px 4px 8px #c5c8cb, inset -4px -4px 8px #ffffff;
   }
-
-  /* Efek Shining dengan pseudo-element */
   .btn-shine::before {
     content: "";
     position: absolute;
     top: 0;
-    left: -150%; /* Mulai dari luar tombol di kiri */
+    left: -150%;
     width: 80%;
     height: 100%;
     background: linear-gradient(
@@ -39,41 +34,13 @@ title %} {% block content %}
       rgba(255, 255, 255, 0.6),
       transparent
     );
-    transform: skewX(-25deg); /* Efek kilatan miring */
+    transform: skewX(-25deg);
     transition: left 0.7s ease-in-out;
   }
-
   .btn-shine:hover::before {
-    left: 150%; /* Bergerak ke kanan hingga keluar tombol */
+    left: 150%;
   }
 </style>
-
-<style>
-  /* Pagination hijau ala Gojek */
-  .pagination .page-item .page-link {
-      color: #1abc2c;           /* warna teks link */
-      border-color: #1abc2c;    /* warna border */
-      background-color: #fff;    /* background default */
-  }
-  
-  .pagination .page-item.active .page-link {
-      background-color: #1abc2c; /* background bullet aktif */
-      color: #fff;               /* teks bullet aktif */
-      border-color: #1abc2c;
-  }
-  
-  .pagination .page-item.disabled .page-link {
-      color: #ccc;
-      border-color: #ccc;
-      background-color: #f8f9fa;
-  }
-  
-  .pagination .page-item .page-link:hover {
-      background-color: #16a026;
-      color: #fff;
-      border-color: #16a026;
-  }
-  </style>  
 
 <div class="container-fluid py-2">
   <div class="row">
@@ -90,110 +57,70 @@ title %} {% block content %}
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th
-                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                  >
-                    ID Order
-                  </th>
-                  <th
-                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                  >
-                    ID Produk
-                  </th>
-                  <th
-                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                  >
-                    ID Supplier
-                  </th>
-                  <th
-                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                  >
-                    Nama Pemesan
-                  </th>
-                  <th
-                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                  >
-                    Asal Pemesan
-                  </th>
-                  <th
-                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                  >
-                    Jumlah
-                  </th>
-                  <th
-                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                  >
-                    Tanggal Order
-                  </th>
-                  <th
-                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                  >
-                    Status Order
-                  </th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Order</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Produk</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Supplier</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pemesan</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Asal Pemesan</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jumlah</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Order</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status Order</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
                 </tr>
               </thead>
 
               <tbody>
                 {% for order, details in data %}
                   {% for detail in details %}
-                  <tr>
-                    <td class="align-middle text-center text-sm">{{ order.id_order }}</td>
-                    <td class="align-middle text-center text-sm">{{ detail.id_product }}</td>
-                    <td class="align-middle text-center text-sm">{{ detail.id_supplier }}</td>
-                    <td class="align-middle text-sm">{{ order.nama_pemesan }}</td>
-                    <td class="align-middle text-sm">{{ order.asal_pemesan }}</td>
-                    <td class="align-middle text-center text-sm">{{ detail.kuantitas }}</td>
-                    <td class="align-middle text-center text-sm">{{ order.tanggal_order.strftime('%Y-%m-%d') if order.tanggal_order else '-' }}</td>
-                    <td class="align-middle text-center text-sm">
-                      <span class="badge badge-sm bg-gradient-success">{{ order.status_order or '-' }}</span>
-                    </td>
-                    <td class="align-middle text-center">
-                      <a href="{{ url_for('home_blueprint.detail_shipments', id=order.id_order) }}" class="btn-shine">Lihat Detail</a>
-                    </td>
-                  </tr>
+                    <tr>
+                      <td class="align-middle text-center text-sm">{{ order.id_order }}</td>
+                      <td class="align-middle text-center text-sm">{{ detail.id_product }}</td>
+                      <td class="align-middle text-center text-sm">{{ detail.id_supplier }}</td>
+                      <td class="align-middle text-sm">{{ order.nama_pemesan }}</td>
+                      <td class="align-middle text-sm">{{ order.asal_pemesan }}</td>
+                      <td class="align-middle text-center text-sm">{{ detail.kuantitas }}</td>
+                      <td class="align-middle text-center text-sm">{{ order.tanggal_order.strftime('%Y-%m-%d') if order.tanggal_order else '-' }}</td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="badge badge-sm bg-gradient-success">{{ order.status_order or '-' }}</span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <a href="{{ url_for('home_blueprint.detail_shipments', id=order.id_order) }}" class="btn-shine">Lihat Detail</a>
+                      </td>
+                    </tr>
                   {% endfor %}
                 {% else %}
                 <tr>
                   <td colspan="9" class="text-center text-muted">Belum ada data pesanan</td>
                 </tr>
                 {% endfor %}
-                </tbody>
-                
+              </tbody>
             </table>
           </div>
         </div>
+
+        <!-- Pagination -->
+        <div class="pagination justify-content-center my-3">
+          {% if orders.has_prev %}
+            <a href="{{ url_for('home_blueprint.orders', page=orders.prev_num) }}" class="btn btn-outline-dark btn-sm mx-1">&laquo; Prev</a>
+          {% else %}
+            <button class="btn btn-outline-secondary btn-sm mx-1" disabled>&laquo; Prev</button>
+          {% endif %}
+
+          <span class="btn btn-dark btn-sm mx-1 disabled">
+            Halaman {{ orders.page }} dari {{ orders.pages }}
+          </span>
+
+          {% if orders.has_next %}
+            <a href="{{ url_for('home_blueprint.orders', page=orders.next_num) }}" class="btn btn-outline-dark btn-sm mx-1">Next &raquo;</a>
+          {% else %}
+            <button class="btn btn-outline-secondary btn-sm mx-1" disabled>Next &raquo;</button>
+          {% endif %}
+        </div>
+
       </div>
     </div>
   </div>
 
- <div class="d-flex justify-content-center mt-4 mb-3">
-  <nav aria-label="Page navigation">
-    <ul class="pagination">
-      {% if page > 1 %}
-        <li class="page-item">
-          <a class="page-link" href="{{ url_for('home_blueprint.orders', page=page-1) }}">Previous</a>
-        </li>
-      {% else %}
-        <li class="page-item disabled"><span class="page-link">Previous</span></li>
-      {% endif %}
-
-      {% for i in range(1, total_pages + 1) %}
-        <li class="page-item {% if i == page %}active{% endif %}">
-          <a class="page-link" href="{{ url_for('home_blueprint.orders', page=i) }}">{{ i }}</a>
-        </li>
-      {% endfor %}
-
-      {% if page < total_pages %}
-        <li class="page-item">
-          <a class="page-link" href="{{ url_for('home_blueprint.orders', page=page+1) }}">Next</a>
-        </li>
-      {% else %}
-        <li class="page-item disabled"><span class="page-link">Next</span></li>
-      {% endif %}
-    </ul>
-  </nav>
-</div>
-
-{% include "includes/footer.html" %}
+  {% include "includes/footer.html" %}
 </div>
 {% endblock content %}

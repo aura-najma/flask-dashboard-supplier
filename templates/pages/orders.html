@@ -48,6 +48,33 @@ title %} {% block content %}
   }
 </style>
 
+<style>
+  /* Pagination hijau ala Gojek */
+  .pagination .page-item .page-link {
+      color: #1abc2c;           /* warna teks link */
+      border-color: #1abc2c;    /* warna border */
+      background-color: #fff;    /* background default */
+  }
+  
+  .pagination .page-item.active .page-link {
+      background-color: #1abc2c; /* background bullet aktif */
+      color: #fff;               /* teks bullet aktif */
+      border-color: #1abc2c;
+  }
+  
+  .pagination .page-item.disabled .page-link {
+      color: #ccc;
+      border-color: #ccc;
+      background-color: #f8f9fa;
+  }
+  
+  .pagination .page-item .page-link:hover {
+      background-color: #16a026;
+      color: #fff;
+      border-color: #16a026;
+  }
+  </style>  
+
 <div class="container-fluid py-2">
   <div class="row">
     <div class="col-12">
@@ -107,48 +134,31 @@ title %} {% block content %}
               </thead>
 
               <tbody>
-                {% for order, detail in data %}
-                <tr>
-                  <td class="align-middle text-center text-sm">
-                    {{ order.id_order }}
-                  </td>
-                  <td class="align-middle text-center text-sm">
-                    {{ detail.id_product }}
-                  </td>
-                  <td class="align-middle text-center text-sm">
-                    {{ detail.id_supplier }}
-                  </td>
-                  <td class="align-middle text-sm">{{ order.nama_pemesan }}</td>
-                  <td class="align-middle text-sm">{{ order.asal_pemesan }}</td>
-                  <td class="align-middle text-center text-sm">
-                    {{ detail.kuantitas }}
-                  </td>
-                  <td class="align-middle text-center text-sm">
-                    {{ order.tanggal_order.strftime('%Y-%m-%d') if
-                    order.tanggal_order else '-' }}
-                  </td>
-                  <td class="align-middle text-center text-sm">
-                    <span class="badge badge-sm bg-gradient-success"
-                      >{{ order.status_order or '-' }}</span
-                    >
-                  </td>
-                  <td class="align-middle text-center">
-                    <a
-                      href="{{ url_for('home_blueprint.detail_shipments', id=order.id_order) }}"
-                      class="btn-shine"
-                    >
-                      Lihat Detail
-                    </a>
-                  </td>
-                </tr>
+                {% for order, details in data %}
+                  {% for detail in details %}
+                  <tr>
+                    <td class="align-middle text-center text-sm">{{ order.id_order }}</td>
+                    <td class="align-middle text-center text-sm">{{ detail.id_product }}</td>
+                    <td class="align-middle text-center text-sm">{{ detail.id_supplier }}</td>
+                    <td class="align-middle text-sm">{{ order.nama_pemesan }}</td>
+                    <td class="align-middle text-sm">{{ order.asal_pemesan }}</td>
+                    <td class="align-middle text-center text-sm">{{ detail.kuantitas }}</td>
+                    <td class="align-middle text-center text-sm">{{ order.tanggal_order.strftime('%Y-%m-%d') if order.tanggal_order else '-' }}</td>
+                    <td class="align-middle text-center text-sm">
+                      <span class="badge badge-sm bg-gradient-success">{{ order.status_order or '-' }}</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <a href="{{ url_for('home_blueprint.detail_shipments', id=order.id_order) }}" class="btn-shine">Lihat Detail</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
                 {% else %}
                 <tr>
-                  <td colspan="8" class="text-center text-muted">
-                    Belum ada data pesanan
-                  </td>
+                  <td colspan="9" class="text-center text-muted">Belum ada data pesanan</td>
                 </tr>
                 {% endfor %}
-              </tbody>
+                </tbody>
+                
             </table>
           </div>
         </div>
@@ -156,6 +166,34 @@ title %} {% block content %}
     </div>
   </div>
 
-  {% include "includes/footer.html" %}
+ <div class="d-flex justify-content-center mt-4 mb-3">
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      {% if page > 1 %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('home_blueprint.orders', page=page-1) }}">Previous</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">Previous</span></li>
+      {% endif %}
+
+      {% for i in range(1, total_pages + 1) %}
+        <li class="page-item {% if i == page %}active{% endif %}">
+          <a class="page-link" href="{{ url_for('home_blueprint.orders', page=i) }}">{{ i }}</a>
+        </li>
+      {% endfor %}
+
+      {% if page < total_pages %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('home_blueprint.orders', page=page+1) }}">Next</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">Next</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+
+{% include "includes/footer.html" %}
 </div>
 {% endblock content %}

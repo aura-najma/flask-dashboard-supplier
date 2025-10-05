@@ -247,8 +247,8 @@ def create_order_alt3():
             print("Payload ke ekspedisi:", payload_ekspedisi)
 
             ekspedisi_urls = {
-                "ekspedisi_A": "https://denis-connectable-lawson.ngrok-free.dev/api/biaya", #KELOMPOK ARYA
-                "ekspedisi_B": "https://bc545e44d560.ngrok-free.app/api/quote"#KELOMPOK MANDA
+                "2": "https://denis-connectable-lawson.ngrok-free.dev/api/biaya", #KELOMPOK ARYA
+                "1": "https://3b9647f384f6.ngrok-free.app/api/quote"#KELOMPOK MANDA
             }
 
             for nama, url in ekspedisi_urls.items():
@@ -265,6 +265,7 @@ def create_order_alt3():
                         "nama_distributor": hasil.get("nama_distributor"),
                         "raw_response": hasil
                     }
+
                 except Exception as e:
                     ekspedisi_results[nama] = {
                         "url": url,
@@ -360,8 +361,8 @@ def kirim_ke_distributor():
 
         # 🗺️ Mapping ID ke Nama Distributor
         distributor_mapping = {
-            1: "Distribusi Nusantara", #KELOMPOK MANDA
-            2: "Cahaya Logistik", #KELOMPOK ARYA
+            1: "PT Kuda Lumping Angkasa Tbk", #KELOMPOK MANDA
+            2: "PT Ikan Terbang Makmur Sejahtera Tbk", #KELOMPOK ARYA
         }
         nama_distributor = distributor_mapping.get(id_distributor, "Distributor Tidak Dikenal")
 
@@ -401,7 +402,7 @@ def kirim_ke_distributor():
         # 📨 URL Distributor
         distributor_endpoints = {
             2: "https://denis-connectable-lawson.ngrok-free.dev/api/pengiriman", #KELOMPOK ARYA
-            1: "https://bc545e44d560.ngrok-free.app/api/shipments" #KELOMPOK MANDA
+            1: "https://3b9647f384f6.ngrok-free.app/api/shipments" #KELOMPOK MANDA
         }
         url_distributor = distributor_endpoints.get(id_distributor)
 
@@ -443,8 +444,8 @@ def kirim_ke_distributor():
 
 
                     retail_endpoints = {
-                        1: "http://192.168.100.112:5000/api/orders/resi",
-                        2: "http://192.168.100.107:5000/api/orders/resi"
+                        1: "http://192.168.100.112:5000/api/orders/resi", #alden
+                        2: "http://192.168.100.113:5000/api/orders/resi" #najla
                     }
                     url_retail = retail_endpoints.get(order.id_retail)
 

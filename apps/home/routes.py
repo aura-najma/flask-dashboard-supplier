@@ -8,7 +8,7 @@ from datetime import date
 from math import ceil
 from collections import defaultdict
 from werkzeug.utils import secure_filename
-from sqlalchemy import func
+from sqlalchemy import func, desc
 from apps.home import blueprint
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
@@ -128,15 +128,42 @@ def index():
 @login_required
 def products():
     page = request.args.get('page', 1, type=int)
-    products_paginated = Product.query.order_by(Product.id_product.asc()).paginate(page=page, per_page=10)
+    
+    # Ambil filter dari URL
+    search_id = request.args.get('id_product', '').strip()
+    search_name = request.args.get('nama_product', '').strip()
+    search_kategori = request.args.get('kategori', '').strip()
+    search_expired = request.args.get('expired_date', '').strip()
+    search_tanggal_masuk = request.args.get('tanggal_masuk', '').strip()
 
-    context = {
-        'segment': 'products',
-        'title': 'Kelola Produk',
-        'products': products_paginated,
-        'today': date.today().isoformat()  # 👈 kirim ke template
-    }
-    return render_template('pages/products.html', **context)
+    # Mulai query
+    query = Product.query
+
+    # Tambahkan filter jika ada input
+    if search_id:
+        query = query.filter(Product.id_product.ilike(f"%{search_id}%"))
+    if search_name:
+        query = query.filter(Product.nama_product.ilike(f"%{search_name}%"))
+    if search_kategori:  # ✅ ini penting biar dropdown jalan
+        query = query.filter(Product.kategori == search_kategori)
+    if search_expired:
+        query = query.filter(Product.expired_date == search_expired)
+    if search_tanggal_masuk:
+        query = query.filter(Product.tanggal_masuk == search_tanggal_masuk)
+
+    # Urut & pagination
+    products_paginated = query.order_by(Product.id_product.asc()).paginate(page=page, per_page=10)
+
+    return render_template('pages/products.html', 
+        products=products_paginated,
+        today=date.today().isoformat(),
+        search_id=search_id,
+        search_name=search_name,
+        search_kategori=search_kategori,
+        search_expired=search_expired,
+        search_tanggal_masuk=search_tanggal_masuk
+    )
+
 
 # 🆕 TAMBAH PRODUK (Auto-generate ID SY001)
 @blueprint.route('/products/add', methods=['GET', 'POST'])
@@ -329,46 +356,68 @@ def view_product(id):
     return render_template('pages/view_product.html', **context)
 
 # 🧾 PESANAN
+
 @blueprint.route('/orders')
 @login_required
 def orders():
-    # Ambil nomor halaman dari query string (?page=)
+    # Ambil parameter filter dari query string
+    search_id = request.args.get('id_order', '').strip()
+    search_nama = request.args.get('nama_pemesan', '').strip()
+    search_tanggal = request.args.get('tanggal_order', '').strip()
+    search_status = request.args.get('status_order', '').strip()
+
     page = request.args.get('page', 1, type=int)
+    per_page = 10
 
-    # Ambil data orders secara paginated (10 per halaman)
-    orders_pagination = (
-        Orders.query
-        .order_by(Orders.id_order.asc())
-        .paginate(page=page, per_page=10)
-    )
+    # Mulai query dasar
+    query = Orders.query
 
-    # Ambil hanya item di halaman ini
+    # 🔍 Filter dinamis
+    if search_id:
+        query = query.filter(Orders.id_order.ilike(f"%{search_id}%"))
+    if search_nama:
+        query = query.filter(Orders.nama_pemesan.ilike(f"%{search_nama}%"))
+    if search_tanggal:
+        query = query.filter(Orders.tanggal_order.like(f"%{search_tanggal}%"))
+    if search_status:
+        # ✅ Filter status hanya kalau sesuai opsi dropdown
+        valid_status = ["Pesanan Dikirim ke Distributor", "Menunggu Konfirmasi"]
+        if search_status in valid_status:
+            query = query.filter(Orders.status_order == search_status)
+
+    # Urut dari order terbaru
+    orders_pagination = query.order_by(desc(Orders.id_order)).paginate(page=page, per_page=per_page)
     orders = orders_pagination.items
 
-    # Ambil semua detail untuk order di halaman ini
+    # Ambil detail per order
     order_ids = [o.id_order for o in orders]
     order_details = (
         OrderDetail.query.filter(OrderDetail.id_order.in_(order_ids)).all()
         if order_ids else []
     )
 
-    # Gabungkan detail per order
     details_dict = defaultdict(list)
     for d in order_details:
         details_dict[d.id_order].append(d)
 
-    # Bentuk pasangan (order, details)
+    for o in orders:
+        details = details_dict.get(o.id_order, [])
+        o.total_kuantitas = sum(d.kuantitas for d in details)
+
     data = [(o, details_dict.get(o.id_order, [])) for o in orders]
 
-    # Kirim data ke template
-    context = {
-        'segment': 'orders',
-        'title': 'Pesanan Masuk',
-        'data': data,
-        'orders': orders_pagination  # ✅ penting untuk pagination HTML
-    }
+    return render_template(
+        'pages/orders.html',
+        segment='orders',
+        title='Pesanan Masuk',
+        data=data,
+        orders=orders_pagination,
+        search_id=search_id,
+        search_nama=search_nama,
+        search_tanggal=search_tanggal,
+        search_status=search_status
+    )
 
-    return render_template('pages/orders.html', **context)
 # 🚚 PENGIRIMAN
 @blueprint.route('/shipments')
 @login_required
@@ -423,6 +472,7 @@ def profile():
         'form': form,
         'readonly_fields': readonly_fields,
         'full_width_fields': full_width_fields,
+        'username': current_user.username  # ✅ tambahkan ini
     }
 
     return render_template('pages/profile.html', **context)

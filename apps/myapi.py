@@ -44,115 +44,16 @@ def get_products():
     return jsonify(result)
 
 
-@api_blueprint.route('/api/supplier/routes', methods=['GET'])
-def get_supplier_routes():
-    id_order = request.args.get('id_order')
-    id_supplier = request.args.get('id_supplier')
-
-    if not id_order or not id_supplier:
-        return jsonify({"error": "id_order dan id_supplier wajib diisi"}), 400
-
-    supplier = Supplier.query.get(id_supplier)
-    order = Orders.query.get(id_order)
-
-    if not supplier or not order:
-        return jsonify({"error": "Data tidak ditemukan"}), 404
-
-    kota_supplier = supplier.kota
-    kota_retail = order.asal_pemesan
-
-    return jsonify({
-        "asal": kota_supplier,
-        "tujuan": kota_retail
-    })
 
 
-# -------------------------------
-# POST /api/orders (ini udah worked sama alden)
-# -------------------------------
+import requests
 from datetime import datetime
 from flask import request, jsonify
 from apps import db
 from apps.models import Product, Orders, OrderDetail
-@api_blueprint.route('/api/orders', methods=['POST'])
-def create_order():
-    data = request.get_json()
-
-    id_retail = data.get('id_retail')
-    items = data.get('items', [])
-
-    if not id_retail or not items:
-        return jsonify({"error": "Data tidak lengkap"}), 400
-
-    total_berat_order = 0
-    id_supplier_ref = None
-
-    try:
-        
-        # 🔹 Tentukan asal_pemesan berdasarkan id_retail
-        if id_retail == 1:
-            asal_pemesan = "Surabaya"
-        elif id_retail == 2:
-            asal_pemesan = "Banyuwangi"
-        else:
-            asal_pemesan = "Tidak Diketahui"  # default fallback
-
-        # 🧾 Buat order kosong dulu
-        new_order = Orders(
-            id_retail=id_retail,  # ✅ simpan id_retail ke tabel
-            nama_pemesan=f"Retail {id_retail}",
-            asal_pemesan=asal_pemesan,
-            total_berat=0,
-            tanggal_order=datetime.now().date(),
-            status_order="Menunggu Konfirmasi"
-        )
-
-
-        # Loop setiap item produk
-        for item in items:
-            id_product = item.get('id_product')
-            jumlah = item.get('qty', 0)  # retail kirim pakai "qty"
-
-            product = Product.query.get(id_product)
-            if not product:
-                db.session.rollback()
-                return jsonify({"error": f"Produk {id_product} tidak ditemukan"}), 404
-
-            if jumlah > product.stok:
-                db.session.rollback()
-                return jsonify({"error": f"Stok tidak cukup untuk produk {id_product}"}), 400
-
-            berat_item = (product.berat or 0) * jumlah
-            total_berat_order += berat_item
-            id_supplier_ref = product.id_supplier
-
-            # Tambah ke order_detail
-            new_detail = OrderDetail(
-                id_order=new_order.id_order,
-                id_product=id_product,
-                id_supplier=product.id_supplier,
-                jumlah=jumlah,
-                berat=berat_item
-            )
-            db.session.add(new_detail)
-
-        # Update total berat order
-        new_order.total_berat = total_berat_order
-        db.session.commit()
-
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
-
-    return jsonify({
-        "message": "Pemesanan multiple item berhasil disimpan",
-        "id_order": new_order.id_order,
-        "id_supplier": id_supplier_ref,
-        "total_berat": total_berat_order,
-        "jumlah_item": len(items)
-    }), 201
-import requests
-
+# -------------------------------
+# WORKED najla ALDEN
+# -------------------------------
 ## BISMILLAH FIX
 @api_blueprint.route('/api/pesanan_retail', methods=['POST'])
 def create_order_alt3():
@@ -233,6 +134,7 @@ def create_order_alt3():
 
         db.session.commit()
 
+
         # ====================================================
         # 🚀 HIT KE 2 EKSPEDISI
         ekspedisi_results = {}
@@ -247,8 +149,8 @@ def create_order_alt3():
             print("Payload ke ekspedisi:", payload_ekspedisi)
 
             ekspedisi_urls = {
-                "2": "https://denis-connectable-lawson.ngrok-free.dev/api/biaya", #KELOMPOK ARYA
-                "1": "https://3b9647f384f6.ngrok-free.app/api/quote"#KELOMPOK MANDA
+                "2": "https://denis-connectable-lawson.ngrok-free.dev//api/biaya", #KELOMPOK ARYA
+                "1": "https://9026dd18c3e6.ngrok-free.app/api/quote"#KELOMPOK MANDA
             }
 
             for nama, url in ekspedisi_urls.items():
@@ -271,6 +173,28 @@ def create_order_alt3():
                         "url": url,
                         "error": str(e)
                     }
+
+            # 🔔 Kumpulkan distributor yang sukses
+            distributor_sukses = []
+            for nama, data_ekspedisi in ekspedisi_results.items():
+                raw = data_ekspedisi.get("raw_response", {})
+                if raw and raw.get("status") == "success":
+                    distributor_sukses.append(raw.get("nama_distributor") or nama)
+
+            # 🔔 Format pesan distributor
+            if distributor_sukses:
+                distributor_text = ", ".join(distributor_sukses)
+                jml_distributor = len(distributor_sukses)
+                distributor_info = f"Distributor yang mengirim info ongkirnya adalah {distributor_text} (sebanyak {jml_distributor} distributor)."
+            else:
+                distributor_info = "Belum ada distributor yang memberikan info ongkir."
+
+            # 🔔 Kirim notifikasi global
+            push_notification(
+                f"Retail {id_retail} memesan {len(items)} barang dari kita dengan ID Order {new_order.id_order}. "
+                f"Jumlah total barang yang mereka beli adalah {total_kuantitas}. {distributor_info}"
+            )
+
 
         # ====================================================
         # 🚀 CALLBACK KE RETAIL
@@ -301,8 +225,8 @@ def create_order_alt3():
             headers = {"Content-Type": "application/json"}
 
             retail_endpoints = {
-                1: "http://192.168.100.112:5000/api/orders/order-callback",
-                2: "http://192.168.100.113:5000/api/orders/order-callback"
+                1: "http://192.168.1.54:5000/api/orders/order-callback",
+                2: "http://192.168.1.49:5000/api/orders/order-callback"
             }
 
             url_retail_callback = retail_endpoints.get(id_retail)
@@ -374,8 +298,6 @@ def kirim_ke_distributor():
                 db.session.rollback()
                 return jsonify({"error": f"Stok tidak cukup untuk produk {product.nama_product}"}), 400
 
-            # 🔢 Kurangi stok saat dikirim ke distributor
-            product.stok -= detail.kuantitas
             barang_list.append({
                 "id_barang": product.id_product,
                 "nama_barang": product.nama_product,
@@ -401,8 +323,8 @@ def kirim_ke_distributor():
 
         # 📨 URL Distributor
         distributor_endpoints = {
-            2: "https://denis-connectable-lawson.ngrok-free.dev/api/pengiriman", #KELOMPOK ARYA
-            1: "https://3b9647f384f6.ngrok-free.app/api/shipments" #KELOMPOK MANDA
+            2: "https://denis-connectable-lawson.ngrok-free.dev//api/pengiriman", #KELOMPOK ARYA
+            1: "https://9026dd18c3e6.ngrok-free.app/api/shipments" #KELOMPOK MANDA
         }
         url_distributor = distributor_endpoints.get(id_distributor)
 
@@ -431,8 +353,21 @@ def kirim_ke_distributor():
                     order.id_distributor = id_distributor
                     order.eta_delivery_date = eta_date
                     order.no_resi = no_resi
+
+                    # 🧮 Baru kurangi stok di sini
+                    for detail in order_details:
+                        product = Product.query.get(detail.id_product)
+                        product.stok -= detail.kuantitas
+
                     db.session.commit()
 
+                    # 🔔 Notifikasi popup otomatis
+                    push_notification(
+                        f"Retail {order.id_retail} memilih {nama_distributor} untuk order {order.id_order} "
+                        f"dengan biaya pengiriman Rp {order.harga_pengiriman:,.0f}. "
+                        f"Mereka harus membayar total sebesar Rp {order.total_pembayaran:,.0f}. "
+                        f"No resi mereka adalah {order.no_resi}."
+                    )
                     # 🚀 Callback ke Retail
                     payload_retail = {
                         "message": "Pesanan sedang dikirim ke distributor",
@@ -444,8 +379,8 @@ def kirim_ke_distributor():
 
 
                     retail_endpoints = {
-                        1: "http://192.168.100.112:5000/api/orders/resi", #alden
-                        2: "http://192.168.100.113:5000/api/orders/resi" #najla
+                        1: "http://192.168.1.54:5000/api/orders/resi", #alden
+                        2: "http://192.168.1.49:5000/api/orders/resi" #najla
                     }
                     url_retail = retail_endpoints.get(order.id_retail)
 
@@ -466,6 +401,7 @@ def kirim_ke_distributor():
             "message": "Pesanan berhasil diteruskan ke distributor",
             "id_order": order.id_order,
             "status_order": order.status_order,
+            "nama_distributor": nama_distributor,
             "harga_pengiriman": float(order.harga_pengiriman or 0),
             "total_pembayaran": float(order.total_pembayaran or 0),
             "no_resi": order.no_resi
@@ -476,55 +412,18 @@ def kirim_ke_distributor():
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
+# =====================================
+# 🧠 Queue Notifikasi Global (disimpan di RAM)
+notifications = []
 
-import requests
-from flask import jsonify
-@api_blueprint.route('/api/send_quote/<int:id_order>', methods=['POST'])
-def send_quote(id_order):
-    # 🔹 Ambil data order
-    order = Orders.query.get(id_order)
-    if not order:
-        return jsonify({"error": "Order tidak ditemukan"}), 404
+def push_notification(message):
+    notifications.append(message)
 
-    # 🔹 Ambil data supplier pertama (contoh id=2)
-    supplier = Supplier.query.get(2)
-    if not supplier:
-        return jsonify({"error": "Supplier tidak ditemukan"}), 404
-
-    # 🔹 Buat payload untuk dikirim (semua dilower biar aman)
-    payload = {
-        "asal_pengirim": (supplier.kota or "").lower(),    # dari tabel supplier
-        "tujuan": (order.asal_pemesan or "").lower(),      # dari tabel orders
-        "kuantitas": order.total_berat or 0                # dari tabel orders
-    }
-    print("Payload yang dikirim ke /quote:", payload)
-
-    try:
-        # 🔹 Kirim POST ke service quote
-        response = requests.post("http://192.168.0.51:5000/api/quote", json=payload)
-        
-        # 🔹 Ambil hasil JSON dari service quote
-        result = response.json()
-        
-        # Pastikan service mengembalikan 'harga'
-        harga = result.get('harga_pengiriman') 
-
-        if harga is None:
-            return jsonify({
-                "message": "Response dari quote tidak mengandung harga",
-                "raw_response": result
-            }), 502
-
-        # 🔹 (Opsional) Simpan harga ke order, kalau kamu mau
-        # order.total_harga = harga
-        # db.session.commit()
-
-        return jsonify({
-            "message": "Harga ongkir berhasil diterima",
-            "payload_dikirim": payload,
-            "harga": harga,
-            "response_asli": result
-        }), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+@api_blueprint.route('/api/notifications', methods=['GET'])
+def get_notifications():
+    if notifications:
+        # ambil notifikasi pertama, lalu hapus dari queue
+        msg = notifications.pop(0)
+        return jsonify({"message": msg})
+    return jsonify({"message": None})
+# =====================================

@@ -1,71 +1,98 @@
 {% extends "layouts/base-auth.html" %}
 
-
 {% block content %}
-
-  <main class="main-content  mt-0">
-    <section>
-      <div class="page-header min-vh-100">
-        <div class="container">
-          <div class="row">
-            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 start-0 text-center justify-content-center flex-column">
-              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center" style="background-image: url('{{ url_for('static', filename='assets/img/illustrations/illustration-signup.jpg') }}'); background-size: cover;">
-              </div>
+<main class="main-content mt-0">
+  <section>
+    <div class="page-header min-vh-100">
+      <div class="container">
+        <div class="row">
+          <!-- Kiri: ilustrasi -->
+          <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 start-0 text-center justify-content-center flex-column">
+            <div 
+              class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center"
+              style="background-image: url('{{ url_for('static', filename='assets/img/illustrations/sayur-signup.png') }}'); background-size: cover; background-position: center;">
             </div>
-            <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
-              <div class="card card-plain">
-                <div class="card-header">
-                  <h4 class="font-weight-bolder">Sign Up</h4>
-                  <p class="mb-0">Enter your email and password to register</p>
-                </div>
-                <div class="card-body">
-                  {% if success %}
-                    <a href="{{ url_for('authentication_blueprint.login') }}" class="d-block text-center w-100 btn btn-primary shadow-2 mb-4">Sign IN</a>
-                  {% else %}
-                  <form method="post" role="form">
-                    {{ form.hidden_tag() }}
-                    
-                    {% if msg %}
-                      <span class="d-block text-danger mb-3">{{ msg | safe }}</span>
-                    {% endif %} 
+          </div>
 
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label">Username</label>
-                      {{ form.username(class="form-control") }}
-                    </div>
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label">Email</label>
-                      {{ form.email(class="input form-control", type="email") }}
-                    </div>
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label">Password</label>
-                      {{ form.password(class="form-control", type="password") }}
-                    </div>
+          <!-- Kanan: form -->
+          <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
+            <div class="card card-plain shadow-lg rounded-4">
+              <div class="card-header text-center">
+                <h4 class="font-weight-bolder mb-1">Sign Up</h4>
+                <p class="mb-0 text-muted">Enter your email and password to register</p>
+              </div>
 
-                    <div class="form-check form-check-info text-start ps-0">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
-                      <label class="form-check-label" for="flexCheckDefault">
-                        I agree the <a href="javascript:;" class="text-dark font-weight-bolder">Terms and Conditions</a>
-                      </label>
-                    </div>
-                    <div class="text-center">
-                      <button type="submit" name="register" class="btn btn-lg bg-gradient-dark btn-lg w-100 mt-4 mb-0">Sign Up</button>
-                    </div>
-                  </form>
+              <div class="card-body">
+                {% if success %}
+                  <!-- ✅ Tombol hijau -->
+                  <a href="{{ url_for('authentication_blueprint.login') }}" 
+                     class="d-block text-center w-100 btn btn-success shadow-2 mb-4">
+                    Sign In
+                  </a>
+                {% else %}
+                <form method="post" role="form">
+                  {{ form.hidden_tag() }}
+
+                  {% if msg %}
+                    <div class="alert alert-danger text-center py-2 mb-3">{{ msg | safe }}</div>
                   {% endif %}
-                </div>
-                <div class="card-footer text-center pt-0 px-lg-2 px-1">
-                  <p class="mb-2 text-sm mx-auto">
-                    Already have an account?
-                    <a href="{{ url_for('authentication_blueprint.login') }}" class="text-primary text-gradient font-weight-bold">Sign in</a>
-                  </p>
-                </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-bold text-dark">Username</label>
+                    {{ form.username(class="form-control", placeholder="Enter your username") }}
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label fw-bold text-dark">Email</label>
+                    {{ form.email(class="form-control", type="email", placeholder="Enter your email") }}
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label fw-bold text-dark">Password</label>
+                    {{ form.password(class="form-control", type="password", placeholder="Enter your password") }}
+                  </div>
+
+
+                  <!-- Checkbox hijau -->
+                  <div class="form-check form-check-info text-start ps-0">
+                    <input class="form-check-input bg-success border-success" type="checkbox" id="flexCheckDefault" checked>
+                    <label class="form-check-label text-dark" for="flexCheckDefault">
+                      I agree to the 
+                      <a href="javascript:;" class="text-success font-weight-bolder">Terms and Conditions</a>
+                    </label>
+                  </div>
+
+                  <div class="text-center">
+                    <button type="submit" name="register" class="btn btn-lg bg-gradient-dark w-100 mt-4 mb-0">
+                      Sign Up
+                    </button>
+                  </div>
+                </form>
+                {% endif %}
+              </div>
+
+              <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                <p class="mb-2 text-sm mx-auto">
+                  Already have an account?
+                  <a href="{{ url_for('authentication_blueprint.login') }}" class="text-success font-weight-bold">
+                    Sign in
+                  </a>
+                </p>
               </div>
             </div>
           </div>
+          <!-- End kanan -->
         </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
+</main>
 
+<!-- Styling tambahan -->
+<style>
+  /* Warna checkbox jadi hijau */
+  .form-check-input:checked {
+    background-color: #198754 !important; /* Bootstrap success green */
+    border-color: #198754 !important;
+  }
+</style>
 {% endblock content %}

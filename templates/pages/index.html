@@ -9,7 +9,6 @@
   <!-- Background Slideshow -->
   <div class="hero-background">
     <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');"></div>
-    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1566385101042-7a432c884c6a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80');"></div>
     <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1574856344991-aaa31b6f4ce3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80');"></div>
   </div>
   
@@ -17,20 +16,16 @@
   <div class="hero-overlay"></div>
 
   <!-- Hero Content -->
-  <div class="hero-content position-relative d-flex align-items-center h-100">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8">
-          <h1 class="display-3 fw-bold text-white mb-4" style="font-family: 'Georgia', serif;" >
+  <div class="hero-content position-relative d-flex align-items-center justify-content-center h-100">
+    <div class="container text-center">
+      <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+          <h1 class="display-3 text-white mb-4" style="font-weight: bolder !important;">
             Dashboard Supplier Sayur Beku
           </h1>
-          <p class="lead text-white mb-5" style="font-size: 1.3rem;">
-            Monitor performa bisnis Anda dengan data real-time dan analisis mendalam
+          <p class="lead text-white mb-5" style="font-size: 1.3rem; font-weight: 500;">
+            Hidup Sehat, Mulai dari Sayuran Beku Berkualitas
           </p>
-          <div class="d-flex gap-3">
-          
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -39,71 +34,83 @@
   <!-- Scroll Indicator -->
   <div class="scroll-indicator position-absolute bottom-0 start-50 translate-middle-x mb-4">
     <div class="d-flex flex-column align-items-center text-white">
-      <span class="mb-2">Scroll untuk melihat dashboard</span>
+      <span class="mb-2" style="font-weight: 500;">Scroll untuk melihat dashboard</span>
       <i class="material-symbols-rounded animate-bounce">keyboard_arrow_down</i>
     </div>
   </div>
 </div>
 
 <!-- Main Dashboard Content -->
-<div class="container-fluid py-5" style="background: linear-gradient(135deg, #f8fdf8 0%, #ffffff 100%);">
+<div class="container-fluid py-5" style="background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);">
   
   <!-- Ringkasan Performa -->
-  <div class="text-center mb-5">
-    <h2 class="fw-bold mb-4" style="font-family: 'Georgia', serif; color: #2e7d32;">Ringkasan Performa</h2>
-    <div class="d-flex flex-wrap justify-content-center gap-4">
-      <div class="card stats-card border-0 shadow-lg p-4 fade-up" style="width: 240px;">
-        <div class="card-body text-center">
-          <div class="icon-wrapper mb-3">
-            <div class="icon-circle bg-success bg-opacity-10">
-              <i class="material-symbols-rounded text-success">inventory_2</i>
+  <div class="container-fluid px-0">
+    <div class="mb-5">
+      <h2 class="mb-4 text-center" style="font-weight: bolder !important; color: #166b16;">Ringkasan Performa</h2>
+      
+      <div class="row g-0">
+        <!-- Total Produk -->
+        <div class="col-md-4">
+          <div class="card stats-card border-0 shadow-lg h-100 rounded-0 fade-up" style="border-right: 1px solid #e9ecef;">
+            <div class="card-body text-center p-4">
+              <div class="icon-wrapper mb-3">
+                <div class="icon-circle" style="background-color: #2e7d32;">
+                  <i class="material-symbols-rounded text-white">inventory_2</i>
+                </div>
+              </div>
+              <h3 class="mb-1 display-6" style="font-weight: bolder !important; color: #2e7d32;">{{ total_products | default(0) }}</h3>
+              <p class="text-muted mb-0 fs-5" style="font-weight: 500;">Total Produk</p>
             </div>
           </div>
-          <h3 class="fw-bold text-success mb-1">{{ total_products | default(0) }}</h3>
-          <p class="text-muted mb-0">Total Produk</p>
         </div>
-      </div>
 
-      <div class="card stats-card border-0 shadow-lg p-4 fade-up" style="width: 240px; animation-delay: 0.2s;">
-        <div class="card-body text-center">
-          <div class="icon-wrapper mb-3">
-            <div class="icon-circle bg-warning bg-opacity-10">
-              <i class="material-symbols-rounded text-warning">shopping_cart</i>
+        <!-- Total Orders -->
+        <div class="col-md-4">
+          <div class="card stats-card border-0 shadow-lg h-100 rounded-0 fade-up" style="border-right: 1px solid #e9ecef; animation-delay: 0.2s;">
+            <div class="card-body text-center p-4">
+              <div class="icon-wrapper mb-3">
+                <div class="icon-circle" style="background-color: #ff9800;">
+                  <i class="material-symbols-rounded text-white">shopping_cart</i>
+                </div>
+              </div>
+              <h3 class="mb-1 display-6" style="font-weight: bolder !important; color: #ff9800;">{{ total_orders | default(0) }}</h3>
+              <p class="text-muted mb-0 fs-5" style="font-weight: 500;">Total Orders</p>
             </div>
           </div>
-          <h3 class="fw-bold text-warning mb-1">{{ total_orders | default(0) }}</h3>
-          <p class="text-muted mb-0">Total Orders</p>
         </div>
-      </div>
 
-      <div class="card stats-card border-0 shadow-lg p-4 fade-up" style="width: 240px; animation-delay: 0.4s;">
-        <div class="card-body text-center">
-          <div class="icon-wrapper mb-3">
-            <div class="icon-circle bg-info bg-opacity-10">
-              <i class="material-symbols-rounded text-info">payments</i>
+        <!-- Total Pendapatan -->
+        <div class="col-md-4">
+          <div class="card stats-card border-0 shadow-lg h-100 rounded-0 fade-up" style="animation-delay: 0.4s;">
+            <div class="card-body text-center p-4">
+              <div class="icon-wrapper mb-3">
+                <div class="icon-circle" style="background-color: #2196f3;">
+                  <i class="material-symbols-rounded text-white">payments</i>
+                </div>
+              </div>
+              <h3 class="mb-1 display-6" style="font-weight: bolder !important; color: #2196f3;">Rp {{ "{:,.0f}".format(total_pendapatan | default(0)) }}</h3>
+              <p class="text-muted mb-0 fs-5" style="font-weight: 500;">Total Pendapatan</p>
             </div>
           </div>
-          <h3 class="fw-bold text-info mb-1">Rp {{ "{:,.0f}".format(total_pendapatan | default(0)) }}</h3>
-          <p class="text-muted mb-0">Total Pendapatan</p>
         </div>
       </div>
     </div>
   </div>
-  
+
   <!-- Three Column Section: Distribusi Kategori, Status Orders, dan Produk Terlaris -->
   <div class="row mt-4">
     
     <!-- Distribusi Kategori -->
     <div class="col-lg-4 mb-4">
       <div class="card border-0 shadow-lg h-100">
-        <div class="card-header bg-transparent border-0 py-4">
-          <h4 class="mb-0 fw-bold" style="font-family: 'Georgia', serif; color: #2e7d32;">
+        <div class="card-header bg-transparent border-0 py-3">
+          <h4 class="mb-0" style="font-weight: bolder !important; color: #2e7d32;">
             <i class="material-symbols-rounded me-2">category</i>
             Distribusi Kategori
           </h4>
         </div>
-        <div class="card-body">
-          <div class="chart-container" style="height: 250px;">
+        <div class="card-body d-flex align-items-center justify-content-center p-4">
+          <div class="chart-container" style="height: 280px; width: 280px;">
             <canvas id="categoryChart"></canvas>
           </div>
         </div>
@@ -113,25 +120,25 @@
     <!-- Status Orders -->
     <div class="col-lg-4 mb-4">
       <div class="card border-0 shadow-lg h-100">
-        <div class="card-header bg-transparent border-0 py-4">
-          <h4 class="mb-0 fw-bold" style="font-family: 'Georgia', serif; color: #2e7d32;">
+        <div class="card-header bg-transparent border-0 py-3">
+          <h4 class="mb-0" style="font-weight: bolder !important; color: #2e7d32;">
             <i class="material-symbols-rounded me-2">pending_actions</i>
             Status Orders
           </h4>
         </div>
-        <div class="card-body">
-          <div class="chart-container" style="height: 250px;">
+        <div class="card-body d-flex align-items-center justify-content-center p-4">
+          <div class="chart-container" style="height: 280px; width: 280px;">
             <canvas id="statusChart"></canvas>
           </div>
         </div>
       </div>
     </div>
     
-    <!-- Produk Terlaris -->
+    <!-- Produk Terlaris - Hanya Tampilkan 3 Produk -->
     <div class="col-lg-4 mb-4">
       <div class="card border-0 shadow-lg h-100">
-        <div class="card-header bg-transparent border-0 py-4">
-          <h4 class="mb-0 fw-bold" style="font-family: 'Georgia', serif; color: #2e7d32;">
+        <div class="card-header bg-transparent border-0 py-3">
+          <h4 class="mb-0" style="font-weight: bolder !important; color: #2e7d32;">
             <i class="material-symbols-rounded me-2">star</i>
             Produk Terlaris
           </h4>
@@ -139,28 +146,27 @@
         <div class="card-body">
           <div class="top-products-list">
             {% if top_products %}
-              {% for product in top_products %}
+              {% for product in top_products[:3] %}
               <div class="product-item d-flex align-items-center mb-3 p-3 rounded hover-lift">
                 <div class="product-image me-3">
                   <img src="{{ product.image or 'https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80' }}" 
                        alt="{{ product.name }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
                 </div>
                 <div class="product-info flex-grow-1">
-                  <h6 class="mb-1 fw-bold">{{ product.name }}</h6>
+                  <h6 class="mb-1" style="font-weight: bolder !important;">{{ product.name }}</h6>
                   <div class="d-flex justify-content-between align-items-center">
-                    <span class="text-muted small">{{ product.quantity | default(0) }} terjual</span>
-                    <span class="badge bg-success">Rp {{ "{:,.0f}".format(product.revenue | default(0)) }}</span>
+                    <span class="text-muted small" style="font-weight: 500;">{{ product.quantity | default(0) }} terjual</span>
+                    <span class="badge bg-success" style="font-weight: 500;">Rp {{ "{:,.0f}".format(product.revenue | default(0)) }}</span>
                   </div>
                 </div>
               </div>
               {% endfor %}
             {% else %}
-              <!-- Fallback data jika top_products tidak tersedia -->
+              <!-- Fallback data jika top_products tidak tersedia - Hanya 3 produk -->
               {% set default_products = [
                 {'name': 'Bayam Organik', 'quantity': 150, 'revenue': 7500000, 'image': 'https://images.unsplash.com/photo-1574856344991-aaa31b6f4ce3?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80'},
                 {'name': 'Wortel Segar', 'quantity': 120, 'revenue': 6000000, 'image': 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80'},
-                {'name': 'Brokoli Hijau', 'quantity': 95, 'revenue': 4750000, 'image': 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80'},
-                {'name': 'Kangkung Segar', 'quantity': 85, 'revenue': 4250000, 'image': 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80'}
+                {'name': 'Brokoli Hijau', 'quantity': 95, 'revenue': 4750000, 'image': 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80'}
               ] %}
               {% for product in default_products %}
               <div class="product-item d-flex align-items-center mb-3 p-3 rounded hover-lift">
@@ -169,15 +175,22 @@
                        alt="{{ product.name }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
                 </div>
                 <div class="product-info flex-grow-1">
-                  <h6 class="mb-1 fw-bold">{{ product.name }}</h6>
+                  <h6 class="mb-1" style="font-weight: bolder !important;">{{ product.name }}</h6>
                   <div class="d-flex justify-content-between align-items-center">
-                    <span class="text-muted small">{{ product.quantity }} terjual</span>
-                    <span class="badge bg-success">Rp {{ "{:,.0f}".format(product.revenue) }}</span>
+                    <span class="text-muted small" style="font-weight: 500;">{{ product.quantity }} terjual</span>
+                    <span class="badge bg-success" style="font-weight: 500;">Rp {{ "{:,.0f}".format(product.revenue) }}</span>
                   </div>
                 </div>
               </div>
               {% endfor %}
             {% endif %}
+            
+            <!-- Tombol Lihat Semua -->
+            <div class="text-center mt-3">
+              <button class="btn btn-outline-success btn-sm" style="font-weight: 500;">
+                Lihat Semua Produk
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -189,7 +202,7 @@
     <div class="col-12">
       <div class="card border-0 shadow-lg">
         <div class="card-header bg-transparent border-0 py-4">
-          <h4 class="mb-0 fw-bold" style="font-family: 'Georgia', serif; color: #2e7d32;">
+          <h4 class="mb-0" style="font-weight: bolder !important; color: #2e7d32;">
             <i class="material-symbols-rounded me-2">collections</i>
             Galeri Produk Unggulan
           </h4>
@@ -204,21 +217,21 @@
                     <img src="{{ product.image or 'https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' }}" 
                          class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
                     <div class="product-badge position-absolute top-0 end-0 m-3">
-                      <span class="badge bg-success">Terlaris</span>
+                      <span class="badge bg-success" style="font-weight: 500;">Terlaris</span>
                     </div>
                   </div>
                   <div class="card-body text-center">
-                    <h5 class="card-title fw-bold" style="color: #2e7d32;">{{ product.name }}</h5>
-                    <p class="card-text text-muted">Produk organik berkualitas tinggi</p>
+                    <h5 class="card-title" style="font-weight: bolder !important; color: #2e7d32;">{{ product.name }}</h5>
+                    <p class="card-text text-muted" style="font-weight: 500;">Produk organik berkualitas tinggi</p>
                     <div class="product-stats">
                       <div class="d-flex justify-content-between text-center">
                         <div>
-                          <h6 class="fw-bold text-success mb-0">{{ product.quantity | default(0) }}</h6>
-                          <small class="text-muted">Terjual</small>
+                          <h6 class="mb-0" style="font-weight: bolder !important; color: #2e7d32;">{{ product.quantity | default(0) }}</h6>
+                          <small class="text-muted" style="font-weight: 500;">Terjual</small>
                         </div>
                         <div>
-                          <h6 class="fw-bold text-primary mb-0">Rp {{ "{:,.0f}".format(product.revenue | default(0)) }}</h6>
-                          <small class="text-muted">Pendapatan</small>
+                          <h6 class="mb-0" style="font-weight: bolder !important; color: #2196f3;">Rp {{ "{:,.0f}".format(product.revenue | default(0)) }}</h6>
+                          <small class="text-muted" style="font-weight: 500;">Pendapatan</small>
                         </div>
                       </div>
                     </div>
@@ -241,21 +254,21 @@
                     <img src="{{ product.image }}" 
                          class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
                     <div class="product-badge position-absolute top-0 end-0 m-3">
-                      <span class="badge bg-success">Terlaris</span>
+                      <span class="badge bg-success" style="font-weight: 500;">Terlaris</span>
                     </div>
                   </div>
                   <div class="card-body text-center">
-                    <h5 class="card-title fw-bold" style="color: #2e7d32;">{{ product.name }}</h5>
-                    <p class="card-text text-muted">{{ product.description }}</p>
+                    <h5 class="card-title" style="font-weight: bolder !important; color: #2e7d32;">{{ product.name }}</h5>
+                    <p class="card-text text-muted" style="font-weight: 500;">{{ product.description }}</p>
                     <div class="product-stats">
                       <div class="d-flex justify-content-between text-center">
                         <div>
-                          <h6 class="fw-bold text-success mb-0">{{ product.quantity }}</h6>
-                          <small class="text-muted">Terjual</small>
+                          <h6 class="mb-0" style="font-weight: bolder !important; color: #2e7d32;">{{ product.quantity }}</h6>
+                          <small class="text-muted" style="font-weight: 500;">Terjual</small>
                         </div>
                         <div>
-                          <h6 class="fw-bold text-primary mb-0">Rp {{ "{:,.0f}".format(product.revenue) }}</h6>
-                          <small class="text-muted">Pendapatan</small>
+                          <h6 class="mb-0" style="font-weight: bolder !important; color: #2196f3;">Rp {{ "{:,.0f}".format(product.revenue) }}</h6>
+                          <small class="text-muted" style="font-weight: 500;">Pendapatan</small>
                         </div>
                       </div>
                     </div>
@@ -323,8 +336,8 @@
   }
   
   .icon-circle {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -333,7 +346,7 @@
   }
   
   .icon-circle i {
-    font-size: 24px;
+    font-size: 32px;
   }
   
   .hover-lift {
@@ -358,14 +371,6 @@
     60% {
       transform: translateY(-5px);
     }
-  }
-  
-  .bg-purple {
-    background-color: #6f42c1 !important;
-  }
-  
-  .text-purple {
-    color: #6f42c1 !important;
   }
   
   .product-item {
@@ -412,6 +417,20 @@
       transform: translateY(0); 
     } 
   }
+
+  /* Font Weight Bolder untuk semua elemen */
+  h1, h2, h3, h4, h5, h6,
+  .card-title, .card-header h4,
+  .stats-card h3,
+  .product-info h6 {
+    font-weight: bolder !important;
+  }
+
+  /* Chart container styling */
+  .chart-container {
+    position: relative;
+    margin: auto;
+  }
 </style>
 
 {% endblock content %}
@@ -441,11 +460,11 @@
     showSlide(0);
   });
 
-  // Category Distribution Chart
+  // Category Distribution Chart - Pie Chart Besar
   const categoryCtx = document.getElementById('categoryChart');
   if (categoryCtx) {
     new Chart(categoryCtx, {
-      type: 'doughnut',
+      type: 'pie',
       data: {
         labels: {{ kategori_labels | tojson | default(['Sayuran Hijau', 'Buah-buahan', 'Umbi-umbian', 'Bumbu Dapur', 'Lainnya']) }},
         datasets: [{
@@ -453,7 +472,7 @@
           backgroundColor: [
             '#2e7d32', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b'
           ],
-          borderWidth: 2,
+          borderWidth: 3,
           borderColor: '#ffffff'
         }]
       },
@@ -464,17 +483,29 @@
           legend: {
             position: 'bottom',
             labels: {
-              padding: 20,
-              usePointStyle: true
+              padding: 15,
+              usePointStyle: true,
+              font: {
+                size: 12,
+                weight: 'bold'
+              }
+            }
+          },
+          tooltip: {
+            bodyFont: {
+              size: 13,
+              weight: 'bold'
             }
           }
         },
-        cutout: '60%'
+        layout: {
+          padding: 10
+        }
       }
     });
   }
 
-  // Status Orders Chart
+  // Status Orders Chart - Pie Chart Besar
   const statusCtx = document.getElementById('statusChart');
   if (statusCtx) {
     new Chart(statusCtx, {
@@ -486,7 +517,7 @@
           backgroundColor: [
             '#2e7d32', '#4caf50', '#8bc34a', '#ffc107', '#f44336'
           ],
-          borderWidth: 2,
+          borderWidth: 3,
           borderColor: '#ffffff'
         }]
       },
@@ -497,10 +528,23 @@
           legend: {
             position: 'bottom',
             labels: {
-              padding: 20,
-              usePointStyle: true
+              padding: 15,
+              usePointStyle: true,
+              font: {
+                size: 12,
+                weight: 'bold'
+              }
+            }
+          },
+          tooltip: {
+            bodyFont: {
+              size: 13,
+              weight: 'bold'
             }
           }
+        },
+        layout: {
+          padding: 10
         }
       }
     });
@@ -519,4 +563,5 @@
     });
   }
 </script>
+
 {% endblock extra_js %}

@@ -1,46 +1,102 @@
 {% extends "layouts/base.html" %}
-
 {% block title %} Data Produk {% endblock title %}
-
 {% block content %}
+
+<style>
+  /* 🔹 Styling untuk form filter agar sejajar */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .filter-bar input,
+  .filter-bar select {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.5rem;
+  }
+  .filter-bar label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #444;
+    margin-right: 0.25rem;
+  }
+</style>
+
 <div class="container-fluid py-4">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="mb-3">
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endwith %}
+
   <div class="row">
     <div class="col-12">
       <div class="card my-4">
-        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-          <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-            <h6 class="text-white text-capitalize ps-3">Daftar Produk</h6>
-          </div>
+      <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3 px-3 d-flex justify-content-between align-items-center">
+          <h6 class="text-white text-capitalize mb-0">Daftar Produk</h6>
+          <a href="{{ url_for('home_blueprint.add_product') }}" class="btn btn-light btn-sm">
+            <i class="fas fa-plus me-1"></i> Tambah Produk
+          </a>
         </div>
+      </div>
 
-        <div class="card-body px-0 pb-2">
-          <!-- Tombol Tambah Produk -->
-          <div class="px-3 mb-3 d-flex justify-content-end">
-            <a href="{{ url_for('home_blueprint.add_product') }}" class="btn bg-gradient-dark mb-0">
-              <i class="material-icons text-sm"></i>&nbsp;&nbsp;Tambah Produk
-            </a>
-          </div>
 
-          <!-- Tabel Produk -->
+        <div class="card-body px-4 pb-2">
+
+          <!-- 🔍 FILTER PRODUK -->
+          <form method="get" action="{{ url_for('home_blueprint.products') }}" class="filter-bar">
+            <input type="text" name="id_product" value="{{ search_id }}" class="form-control form-control-sm" placeholder="ID Produk">
+            <input type="text" name="nama_product" value="{{ search_name }}" class="form-control form-control-sm" placeholder="Nama Produk">
+
+            <select name="kategori" class="form-select form-select-sm" style="min-width: 140px;">
+              <option value="">Semua Kategori</option>
+              <option value="Organik" {% if search_kategori == 'Organik' %}selected{% endif %}>Organik</option>
+              <option value="Non Organik" {% if search_kategori == 'Non Organik' %}selected{% endif %}>Non Organik</option>
+            </select>
+
+            <label for="expired_date">Expired:</label>
+            <input type="date" name="expired_date" id="expired_date" value="{{ search_expired }}" class="form-control form-control-sm">
+
+            <label for="tanggal_masuk">Masuk:</label>
+            <input type="date" name="tanggal_masuk" id="tanggal_masuk" value="{{ search_tanggal_masuk }}" class="form-control form-control-sm">
+
+            <button type="submit" class="btn btn-dark btn-sm">
+              <i class="fas fa-search"></i> Cari
+            </button>
+            <a href="{{ url_for('home_blueprint.products') }}" class="btn btn-secondary btn-sm">Reset</a>
+          </form>
+
+          <!-- 🔹 TABEL PRODUK -->
           <div class="table-responsive p-0">
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Produk</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Produk</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Kategori</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Harga</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stok</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Expired</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tanggal Masuk</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Aksi</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kategori</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Harga</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stok</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Expired</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Masuk</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
                 </tr>
               </thead>
 
               <tbody>
                 {% for p in products.items %}
                 <tr>
-                  <td>{{ loop.index + (products.page - 1) * products.per_page }}</td>
+                  <td>{{ p.id_product }}</td>
                   <td>
                     <div class="d-flex align-items-center">
                       <img src="{{ p.gambar }}" class="avatar avatar-sm me-3 border-radius-lg" alt="{{ p.nama_product }}">
@@ -56,123 +112,44 @@
                   <td>{{ p.expired_date if p.expired_date else '-' }}</td>
                   <td>{{ p.tanggal_masuk }}</td>
                   <td class="align-middle">
-                    <!-- Dropdown Aksi -->
                     <div class="dropdown">
-                      <button class="btn btn-link text-secondary mb-0" data-bs-toggle="dropdown" aria-expanded="false">
+                      <button class="btn btn-link text-secondary mb-0" data-bs-toggle="dropdown">
                         <i class="fa fa-ellipsis-v text-xs"></i>
                       </button>
                       <ul class="dropdown-menu">
-                        <!-- Tambah Stok -->
                         <li>
                           {% if p.stok == 0 %}
-                          <button 
-                            type="button"
-                            class="dropdown-item"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalTambahStok{{ p.id_product }}">
-                            Tambah Stok
-                          </button>
+                          <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalTambahStok{{ p.id_product }}">Tambah Stok</button>
                           {% else %}
-                          <button 
-                            type="button"
-                            class="dropdown-item text-muted" 
-                            disabled
-                            title="Tambah stok hanya bisa dilakukan jika stok = 0">
-                            Tambah Stok (Stok ≠ 0)
-                          </button>
+                          <button type="button" class="dropdown-item text-muted" disabled>Tambah Stok (Stok ≠ 0)</button>
                           {% endif %}
                         </li>
-
-                        <!-- View -->
-                        <li>
-                          <a class="dropdown-item" href="{{ url_for('home_blueprint.view_product', id=p.id_product) }}">
-                            View Details
-                          </a>
-                        </li>
-
-                        <!-- Edit -->
-                        <li>
-                          <a class="dropdown-item" href="{{ url_for('home_blueprint.edit_product', id=p.id_product) }}">
-                            Edit
-                          </a>
-                        </li>
-
-                        <!-- Delete -->
-                        <li>
-                          <a class="dropdown-item text-danger" 
-                             href="{{ url_for('home_blueprint.delete_product', id=p.id_product) }}" 
-                             onclick="return confirm('Yakin ingin hapus produk ini?')">
-                            Delete
-                          </a>
-                        </li>
+                        <li><a class="dropdown-item" href="{{ url_for('home_blueprint.view_product', id=p.id_product) }}">View Details</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('home_blueprint.edit_product', id=p.id_product) }}">Edit</a></li>
+                        <li><a class="dropdown-item text-danger" href="{{ url_for('home_blueprint.delete_product', id=p.id_product) }}" onclick="return confirm('Yakin ingin hapus produk ini?')">Delete</a></li>
                       </ul>
                     </div>
                   </td>
                 </tr>
-
-                <!-- Modal Tambah Stok -->
-                <div class="modal fade" id="modalTambahStok{{ p.id_product }}" tabindex="-1" aria-labelledby="modalTambahStokLabel{{ p.id_product }}" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                      <form action="{{ url_for('home_blueprint.add_stock', id=p.id_product) }}" method="POST">
-                        <div class="modal-header bg-gradient-dark text-white">
-                          <h5 class="modal-title" id="modalTambahStokLabel{{ p.id_product }}">Tambah Stok Produk</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <p>Produk: <strong>{{ p.nama_product }}</strong></p>
-
-                          <div class="mb-3">
-                            <label for="jumlah_tambah_{{ p.id_product }}" class="form-label">Jumlah Stok Baru</label>
-                            <input 
-                              type="number" 
-                              class="form-control" 
-                              name="jumlah_tambah" 
-                              id="jumlah_tambah_{{ p.id_product }}" 
-                              min="1" 
-                              placeholder="Masukkan jumlah stok baru" 
-                              required>
-                          </div>
-
-                          <div class="mb-3">
-                            <label for="expired_date_{{ p.id_product }}" class="form-label">Tanggal Kadaluarsa</label>
-                              <input 
-                                type="date" 
-                                class="form-control" 
-                                name="expired_date" 
-                                id="expired_date_{{ p.id_product }}" 
-                                min="{{ today }}"
-                                required>
-
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                          <button type="submit" class="btn btn-dark">Tambah</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Modal -->
-
+                {% else %}
+                <tr>
+                  <td colspan="8" class="text-center text-muted">Tidak ada produk ditemukan</td>
+                </tr>
                 {% endfor %}
               </tbody>
             </table>
           </div>
 
-          <!-- Pagination -->
+          <!-- 🔸 PAGINATION -->
           <div class="pagination justify-content-center my-3">
             {% if products.has_prev %}
             <a href="{{ url_for('home_blueprint.products', page=products.prev_num) }}" class="btn btn-outline-dark btn-sm mx-1">&laquo; Prev</a>
             {% else %}
             <button class="btn btn-outline-secondary btn-sm mx-1" disabled>&laquo; Prev</button>
             {% endif %}
-
             <span class="btn btn-dark btn-sm mx-1 disabled">
               Halaman {{ products.page }} dari {{ products.pages }}
             </span>
-
             {% if products.has_next %}
             <a href="{{ url_for('home_blueprint.products', page=products.next_num) }}" class="btn btn-outline-dark btn-sm mx-1">Next &raquo;</a>
             {% else %}
@@ -184,5 +161,43 @@
       </div>
     </div>
   </div>
+
+  <!-- 🔹 MODAL TAMBAH STOK -->
+  {% for p in products.items %}
+  <div class="modal fade" id="modalTambahStok{{ p.id_product }}" tabindex="-1" aria-labelledby="modalTambahStokLabel{{ p.id_product }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header bg-gradient-dark text-white">
+          <h6 class="modal-title" id="modalTambahStokLabel{{ p.id_product }}">
+            Tambah Stok Produk: {{ p.nama_product }}
+          </h6>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+
+        <form action="{{ url_for('home_blueprint.add_stock', id=p.id_product) }}" method="POST">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="jumlah_tambah_{{ p.id_product }}" class="form-label">Jumlah Tambahan Stok</label>
+              <input type="number" class="form-control" name="jumlah_tambah" id="jumlah_tambah_{{ p.id_product }}" min="1" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="expired_date_{{ p.id_product }}" class="form-label">Tanggal Kadaluarsa</label>
+              <input type="date" class="form-control" name="expired_date" id="expired_date_{{ p.id_product }}" required>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-dark btn-sm">Simpan</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 </div>
+
 {% endblock content %}

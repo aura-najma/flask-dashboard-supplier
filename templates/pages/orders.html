@@ -1,5 +1,5 @@
-{% extends "layouts/base.html" %} 
-{% block title %}Pesanan Masuk{% endblock title %} 
+{% extends "layouts/base.html" %}
+{% block title %}Pesanan Masuk{% endblock title %}
 {% block content %}
 
 <style>
@@ -28,12 +28,7 @@
     left: -150%;
     width: 80%;
     height: 100%;
-    background: linear-gradient(
-      120deg,
-      transparent,
-      rgba(255, 255, 255, 0.6),
-      transparent
-    );
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.6), transparent);
     transform: skewX(-25deg);
     transition: left 0.7s ease-in-out;
   }
@@ -47,54 +42,103 @@
     <div class="col-12">
       <div class="card my-4">
         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-          <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-            <h6 class="text-white text-capitalize ps-3">Pesanan Masuk</h6>
+          <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3 px-3 d-flex justify-content-between align-items-center">
+            <h6 class="text-white text-capitalize">Pesanan Masuk</h6>
           </div>
         </div>
 
-        <div class="card-body px-0 pb-2">
-          <div class="table-responsive p-0">
+        <div class="card-body px-3 pb-2">
+          <!-- 🔎 Form Filter -->
+          <form method="GET" action="{{ url_for('home_blueprint.orders') }}" class="mb-4">
+            <div class="row g-3 align-items-end">
+
+              <div class="col-md-2">
+                <label class="form-label mb-1 text-secondary text-xs">ID Order</label>
+                <input type="text" name="id_order" value="{{ search_id }}" class="form-control form-control-sm" placeholder="contoh: 120">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label mb-1 text-secondary text-xs">Nama Pemesan</label>
+                <input type="text" name="nama_pemesan" value="{{ search_nama }}" class="form-control form-control-sm" placeholder="contoh: Retail 1">
+              </div>
+
+              <div class="col-md-2">
+                <label class="form-label mb-1 text-secondary text-xs">Tanggal Order</label>
+                <input type="date" name="tanggal_order" value="{{ search_tanggal }}" class="form-control form-control-sm">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label mb-1 text-secondary text-xs">Status Order</label>
+                <select name="status_order" class="form-select form-select-sm">
+                  <option value="">-- Semua Status --</option>
+                  <option value="Menunggu Konfirmasi" {% if search_status == 'Menunggu Konfirmasi' %}selected{% endif %}>Menunggu Konfirmasi</option>
+                  <option value="Pesanan Dikirim ke Distributor" {% if search_status == 'Pesanan Dikirim ke Distributor' %}selected{% endif %}>Pesanan Dikirim ke Distributor</option>
+                </select>
+              </div>
+
+              <div class="col-md-2 d-flex justify-content-start gap-2">
+                <button type="submit" class="btn btn-dark btn-sm w-50">Cari</button>
+                <a href="{{ url_for('home_blueprint.orders') }}" class="btn btn-secondary btn-sm w-50">Reset</a>
+              </div>
+
+            </div>
+          </form>
+
+          <!-- 🔹 Tabel Pesanan -->
+          <div class="table-responsive">
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Order</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">ID Order</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pemesan</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Asal Pemesan</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jumlah</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Order</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status Order</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Jumlah</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Tanggal Order</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Status Order</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Aksi</th>
                 </tr>
               </thead>
 
               <tbody>
                 {% for order, details in data %}
-                  {% for detail in details %}
-                    <tr>
-                      <td class="align-middle text-center text-sm">{{ order.id_order }}</td>
-                      <td class="align-middle text-sm">{{ order.nama_pemesan }}</td>
-                      <td class="align-middle text-sm">{{ order.asal_pemesan }}</td>
-                      <td class="align-middle text-center text-sm">{{ order.total_kuantitas }}</td>
-                      <td class="align-middle text-center text-sm">{{ order.tanggal_order.strftime('%Y-%m-%d') if order.tanggal_order else '-' }}</td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-success">{{ order.status_order or '-' }}</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <a href="{{ url_for('home_blueprint.detail_shipments', id=order.id_order) }}" class="btn-shine">Lihat Detail</a>
-                      </td>
-                    </tr>
-                  {% endfor %}
+                  <tr>
+                    <td class="align-middle text-center text-sm">{{ order.id_order }}</td>
+                    <td class="align-middle text-sm">{{ order.nama_pemesan }}</td>
+                    <td class="align-middle text-sm">{{ order.asal_pemesan }}</td>
+                    <td class="align-middle text-center text-sm">{{ order.total_kuantitas or 0 }}</td>
+                    <td class="align-middle text-center text-sm">
+                      {{ order.tanggal_order.strftime('%Y-%m-%d') if order.tanggal_order else '-' }}
+                    </td>
+                    <td class="align-middle text-center text-sm">
+                      <span class="badge badge-sm 
+                        {% if order.status_order == 'Pesanan Dikirim ke Distributor' %}
+                          bg-gradient-success
+                        {% elif order.status_order == 'Menunggu Konfirmasi' %}
+                          bg-gradient-warning
+                        {% else %}
+                          bg-gradient-secondary
+                        {% endif %}
+                      ">
+                        {{ order.status_order or '-' }}
+                      </span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <a href="{{ url_for('home_blueprint.detail_shipments', id=order.id_order) }}" class="btn-shine">
+                        Lihat Detail
+                      </a>
+                    </td>
+                  </tr>
                 {% else %}
-                <tr>
-                  <td colspan="9" class="text-center text-muted">Belum ada data pesanan</td>
-                </tr>
+                  <tr>
+                    <td colspan="7" class="text-center text-muted">Belum ada data pesanan</td>
+                  </tr>
                 {% endfor %}
               </tbody>
             </table>
           </div>
         </div>
 
-        <!-- Pagination -->
+        <!-- 🔸 Pagination -->
         <div class="pagination justify-content-center my-3">
           {% if orders.has_prev %}
             <a href="{{ url_for('home_blueprint.orders', page=orders.prev_num) }}" class="btn btn-outline-dark btn-sm mx-1">&laquo; Prev</a>

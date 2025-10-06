@@ -5,6 +5,67 @@
     {% include "includes/head.html" %}
     {% block extrastyle %}{% endblock extrastyle %}
 </head>
+<!-- 🔔 Global Notification Checker -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+async function checkNotifications() {
+  try {
+    const res = await fetch('/api/notifications');
+    const data = await res.json();
+
+    if (data.message) {
+      Swal.fire({
+        title: '📦 Pesanan Baru Masuk!',
+        text: data.message,
+        icon: 'success',
+        confirmButtonText: 'Oke',
+        timer: 8000,
+        timerProgressBar: true
+      });
+    }
+  } catch (e) {
+    console.error('Gagal ambil notifikasi:', e);
+  }
+}
+
+// 🔁 Cek setiap 5 detik
+setInterval(checkNotifications, 5000);
+
+// 🔁 Cek langsung saat halaman dimuat
+checkNotifications();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+async function checkDistNotifications() {
+  try {
+    const res = await fetch('/api/notifications');
+    const data = await res.json();
+
+    if (data.message) {
+      Swal.fire({
+        icon: 'success',
+        title: '📦 Update Pesanan!',
+        text: data.message,
+        confirmButtonText: 'Oke',
+        didOpen: () => {
+          const btn = document.querySelector('.swal2-confirm');
+          if (btn) {
+            btn.style.backgroundColor = '#28a745';
+            btn.style.borderColor = '#28a745';
+            btn.style.color = '#fff';
+          }
+        }
+      });
+    }
+  } catch (e) {
+    console.error('Gagal ambil notifikasi:', e);
+  }
+}
+
+// Cek setiap 5 detik
+setInterval(checkNotifications, 5000);
+checkNotifications();
+</script>
 
 <body class="g-sidenav-show  bg-gray-100">
 

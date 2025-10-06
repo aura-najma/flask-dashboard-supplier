@@ -1,31 +1,22 @@
-{% extends "layouts/base.html" %} {% block title %} Template {% endblock title
-%} {% block content %}
-<!-- 
-  NOTE:
-  Kalau mau naruh HTML tambahan (misalnya card, table, chart, dll),
-  taruh di DALAM <div class="container-fluid py-2"> ini ya.
-  Jangan di luarnya, biar struktur layout tetap rapi dan footer tetap di posisi bawah.
--->
+{% extends "layouts/base.html" %}
+{% block title %}Detail Pengiriman{% endblock title %}
+{% block content %}
+
 <style>
   .view-product-body {
-    /* Hapus style background Glassmorphism yang menimpa bg-gray-100 dari base.html */
     padding: 2rem;
     min-height: 100vh;
-    background-color: transparent !important; /* Memastikan background abu-abu utama terlihat */
+    background-color: transparent !important;
   }
   
   .glass-card {
-    /* UBAH: Dari Glassmorphism ke Kartu Putih Material */
-    background-color: #ffffff; /* Warna putih solid */
-    backdrop-filter: none; /* Nonaktifkan blur */
-    -webkit-backdrop-filter: none;
+    background-color: #ffffff;
     border-radius: 10px;
     border: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tambahkan shadow halus */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
   }
-  
-  /* Tambahkan style baru untuk Badge Status Hijau (Meniru bg-gradient-success) */
+
   .status-badge-success {
     background-color: #66bb6a;
     background-image: linear-gradient(195deg, #66bb6a, #43a047);
@@ -39,11 +30,8 @@
     font-size: 0.75rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-  
-  /* Style sisanya tidak diubah */
-  .card-body {
-    padding: 2rem;
-  }
+
+  .card-body { padding: 2rem; }
   .card-title {
     font-weight: 600;
     color: #0c5026;
@@ -51,25 +39,51 @@
     padding-bottom: 0.5rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
-  .card-body p {
-    color: #0c5026;
-    margin-bottom: 0.5rem;
-  }
-  .card-body p strong {
-    color: #2c4261;
-  }
+  .card-body p { color: #0c5026; margin-bottom: 0.5rem; }
+  .card-body p strong { color: #2c4261; }
   .card-body .fas {
     color: #0c5026;
     text-shadow: 0 0 10px rgba(12, 80, 38, 0.3);
   }
-  .neumorph-badge {
-    padding: 0.5em 0.9em;
-    border-radius: 0.375rem;
+
+  .btn-shine {
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
     font-weight: 600;
+    color: #3a3a3a;
+    text-decoration: none;
     background-color: #eef1f5;
-    box-shadow: 4px 4px 8px #c5c8cb, -4px -4px 8px #ffffff;
-    color: #0c5026;
+    box-shadow: 6px 6px 12px #c5c8cb, -6px -6px 12px #ffffff;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    overflow: hidden;
   }
+  .btn-shine:active {
+    box-shadow: inset 6px 6px 12px #c5c8cb, inset -6px -6px 12px #ffffff;
+  }
+  .btn-shine::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 80%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+    transform: skewX(-25deg);
+    transition: left 0.8s ease;
+  }
+  .btn-shine:hover::before { left: 150%; }
+
+  .product-image-thumbnail {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
   .table-neumorph {
     width: 100%;
     border-collapse: separate;
@@ -97,77 +111,17 @@
     border: none;
     vertical-align: middle;
   }
-  .table-neumorph tbody td:first-child {
-    border-radius: 10px 0 0 10px;
-  }
-  .table-neumorph tbody td:last-child {
-    border-radius: 0 10px 10px 0;
-  }
-  .btn-shine {
-    padding: 12px 24px;
-    border-radius: 12px;
-    border: none;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #3a3a3a;
-    text-decoration: none;
-    display: inline-block;
-    background-color: #eef1f5;
-    box-shadow: 6px 6px 12px #c5c8cb, -6px -6px 12px #ffffff;
-    transition: all 0.2s ease-in-out;
-    position: relative;
-    overflow: hidden;
-  }
-  .btn-shine:active {
-    box-shadow: inset 6px 6px 12px #c5c8cb, inset -6px -6px 12px #ffffff;
-  }
-  .btn-shine::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -150%;
-    width: 80%;
-    height: 100%;
-    background: linear-gradient(
-      120deg,
-      transparent,
-      rgba(255, 255, 255, 0.7),
-      transparent
-    );
-    transform: skewX(-25deg);
-    transition: left 0.8s ease;
-  }
-  .btn-shine:hover::before {
-    left: 150%;
-  }
-  .product-image-thumbnail {
-    width: 60px;
-    height: 60px;
-    border-radius: 8px;
-    object-fit: cover;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  .totals-summary {
-    display: flex;
-    justify-content: flex-end; /* Posisikan ke kanan */
-  }
-  .totals-box {
-    width: 100%;
-    max-width: 400px; /* Batasi lebar agar tidak terlalu panjang */
-  }
+
+  .totals-summary { display: flex; justify-content: flex-end; }
+  .totals-box { width: 100%; max-width: 400px; }
   .total-row {
     display: flex;
     justify-content: space-between;
     padding: 0.5rem 0;
     font-size: 1rem;
   }
-  .total-row .label {
-    color: #3b5270;
-  }
-  .total-row .value {
-    font-weight: 600;
-    color: #2c4261;
-  }
+  .total-row .label { color: #3b5270; }
+  .total-row .value { font-weight: 600; color: #2c4261; }
   .grand-total {
     padding-top: 1rem;
     margin-top: 0.5rem;
@@ -180,84 +134,64 @@
   .grand-total .value {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #43a047; /* Ganti ke Hijau */
+    color: #43a047;
   }
-  </style>  
+</style>
 
 <div class="container-fluid py-2">
   <div class="container" style="max-width: 900px">
     <div class="d-flex align-items-center mb-4">
-      <a
-        href="{{ url_for('home_blueprint.orders') }}"
-        class="btn-shine me-3"
-        style="padding: 10px 15px"
-      >
+      <a href="{{ url_for('home_blueprint.orders') }}" class="btn-shine me-3" style="padding: 10px 15px">
         <i class="fas fa-arrow-left"></i>
       </a>
-      <h3
-        class="mb-0"
-        style="color: #0c5026; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)"
-      >
+      <h3 class="mb-0" style="color: #0c5026; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)">
         Rincian Pesanan #{{ order.id_order }}
       </h3>
     </div>
 
+    <!-- Info Pengiriman -->
     <div class="row">
       <div class="col-md-6">
         <div class="glass-card h-100">
           <div class="card-body">
-            <h5 class="card-title">
-              <i class="fas fa-truck me-2"></i> Info Pengiriman
-            </h5>
-            <p>
-              <strong>Jasa Kirim:</strong> 
-              {{ 'Distributor ' ~ order.id_distributor if order.id_distributor else 'Belum ditentukan' }}
-            </p>
-            <p>
-              <strong>No. Resi:</strong> {{ order.no_resi or 'Belum tersedia' }}
-            </p>
+            <h5 class="card-title"><i class="fas fa-truck me-2"></i> Info Pengiriman</h5>
+            <p><strong>Jasa Kirim:</strong> {{ 'Distributor ' ~ order.id_distributor if order.id_distributor else 'Belum ditentukan' }}</p>
+            <p><strong>No. Resi:</strong> {{ order.no_resi or 'Belum tersedia' }}</p>
             <p>
               <strong>Status:</strong>
-              <span class="status-badge-success"
-              >{{ order.status_order or 'Status tidak diketahui' }}</span
-              >
-              </p>
-            {% if order.shipment and order.shipment.tanggal_kirim %}
-            <p>
-              <strong>Tgl. Kirim:</strong> {{
-              order.shipment.tanggal_kirim.strftime('%d %B %Y') }}
+              <span class="status-badge-success">
+                {{ order.status_order or 'Status tidak diketahui' }}
+              </span>
             </p>
-            {% endif %} {% if order.eta_delivery_date %}
-            <p>
-              <strong>Estimasi Tiba:</strong> {{
-              order.eta_delivery_date.strftime('%d %B %Y') }}
-            </p>
+            {% if order.tanggal_order %}
+            <p><strong>Tgl. Kirim:</strong> {{ order.tanggal_order.strftime('%d %B %Y') }}</p>
+            {% endif %}
+            {% if order.eta_delivery_date %}
+            <p><strong>Estimasi Tiba:</strong> {{ order.eta_delivery_date.strftime('%d %B %Y') }}</p>
             {% endif %}
           </div>
         </div>
       </div>
+
+      <!-- Info Pemesan -->
       <div class="col-md-6">
         <div class="glass-card h-100">
           <div class="card-body">
-            <h5 class="card-title">
-              <i class="fas fa-user me-2"></i> Info Pemesan
-            </h5>
+            <h5 class="card-title"><i class="fas fa-user me-2"></i> Info Pemesan</h5>
             <p><strong>Nama:</strong> {{ order.nama_pemesan }}</p>
             <p><strong>Asal:</strong> {{ order.asal_pemesan }}</p>
-            <p>
-              <strong>Tgl. Pesan:</strong> {{ order.tanggal_order.strftime('%d
-              %B %Y') if order.tanggal_order }}
-            </p>
+            {% if order.tanggal_order %}
+            <p><strong>Tgl. Pesan:</strong> {{ order.tanggal_order.strftime('%d %B %Y') }}</p>
+            {% endif %}
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Detail Produk -->
     <div class="glass-card">
       <div class="card-body">
-        <h5 class="card-title">
-          <i class="fas fa-box-open me-2"></i> Detail Produk
-        </h5>
+        <h5 class="card-title"><i class="fas fa-box-open me-2"></i> Detail Produk</h5>
         <table class="table-neumorph">
           <thead>
             <tr>
@@ -271,22 +205,16 @@
             <tr>
               <td>
                 <div class="d-flex align-items-center">
-                  <img
-                    src="{{ detail.product.gambar or 'https://via.placeholder.com/60' }}"
-                    alt="{{ detail.product.nama_product }}"
-                    class="product-image-thumbnail me-3"
-                  />
+                  <img src="{{ detail.product.gambar or 'https://via.placeholder.com/60' }}" 
+                       alt="{{ detail.product.nama_product }}" 
+                       class="product-image-thumbnail me-3" />
                   <div>
-                    <p class="fw-bold mb-0">
-                      {{ detail.product.nama_product }}
-                    </p>
+                    <p class="fw-bold mb-0">{{ detail.product.nama_product }}</p>
                     <small class="text-muted">{{ detail.id_product }}</small>
                   </div>
                 </div>
               </td>
-              <td class="text-center align-middle fw-bold">
-                {{ detail.kuantitas }}
-              </td>
+              <td class="text-center align-middle fw-bold">{{ detail.kuantitas }}</td>
               <td class="text-end align-middle fw-bold">
                 Rp {{ "{:,.0f}".format(detail.jumlah_harga) }}
               </td>
@@ -297,25 +225,20 @@
 
         <hr style="margin: 2rem 0" />
 
+        <!-- Ringkasan Total -->
         <div class="totals-summary">
           <div class="totals-box">
             <div class="total-row">
               <span class="label">Total Pesanan Produk</span>
-              <span class="value"
-                >Rp {{ "{:,.0f}".format(order.total_order) }}</span
-              >
+              <span class="value">Rp {{ "{:,.0f}".format(order.total_order or 0) }}</span>
             </div>
             <div class="total-row">
               <span class="label">Biaya Pengiriman</span>
-              <span class="value"
-                >Rp {{ "{:,.0f}".format(order.harga_pengiriman) }}</span
-              >
+              <span class="value">Rp {{ "{:,.0f}".format(order.harga_pengiriman or 0) }}</span>
             </div>
             <div class="total-row grand-total">
               <span class="label">Total Pembayaran</span>
-              <span class="value"
-                >Rp {{ "{:,.0f}".format(order.total_pembayaran) }}</span
-              >
+              <span class="value">Rp {{ "{:,.0f}".format(order.total_pembayaran or 0) }}</span>
             </div>
           </div>
         </div>
@@ -323,4 +246,5 @@
     </div>
   </div>
 </div>
+
 {% endblock content %}

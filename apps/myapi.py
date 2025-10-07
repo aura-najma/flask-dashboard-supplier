@@ -130,6 +130,7 @@ def create_order_alt3():
 
         # 🔁 Update total di tabel orders
         new_order.total_order = total_order
+        new_order.total_pembayaran = total_order
         new_order.total_kuantitas = total_kuantitas
 
         db.session.commit()
@@ -150,7 +151,7 @@ def create_order_alt3():
 
             ekspedisi_urls = {
                 "2": "https://denis-connectable-lawson.ngrok-free.dev//api/biaya", #KELOMPOK ARYA
-                "1": "https://9026dd18c3e6.ngrok-free.app/api/quote"#KELOMPOK MANDA
+                "1": "https://8e938fbc354d.ngrok-free.app/api/quote"#KELOMPOK MANDA
             }
 
             for nama, url in ekspedisi_urls.items():
@@ -162,7 +163,7 @@ def create_order_alt3():
                     ekspedisi_results[nama] = {
                         "url": url,
                         "harga": harga,
-                        "estimasi": hasil.get("estimasi_pengiriman") or hasil.get("estimasi"),
+                        "estimasi": hasil.get("estimasi"),
                         "id_distributor": hasil.get("id_distributor"),
                         "nama_distributor": hasil.get("nama_distributor"),
                         "raw_response": hasil
@@ -208,7 +209,7 @@ def create_order_alt3():
                         "id_distributor": raw.get("id_distributor"),
                         "nama_distributor": raw.get("nama_distributor"),
                         "harga_pengiriman": raw.get("harga_pengiriman"),
-                        "estimasi": raw.get("estimasi_pengiriman") or raw.get("estimasi")
+                        "estimasi": raw.get("estimasi")
                     })
 
             payload_retail = {
@@ -225,8 +226,8 @@ def create_order_alt3():
             headers = {"Content-Type": "application/json"}
 
             retail_endpoints = {
-                1: "http://192.168.1.54:5000/api/orders/order-callback",
-                2: "http://192.168.1.49:5000/api/orders/order-callback"
+                1: "https://flexuous-reasonedly-shizue.ngrok-free.dev/api/orders/order-callback",
+                2: "https://continuously-solvolytic-sofia.ngrok-free.dev/api/orders/order-callback"
             }
 
             url_retail_callback = retail_endpoints.get(id_retail)
@@ -323,8 +324,8 @@ def kirim_ke_distributor():
 
         # 📨 URL Distributor
         distributor_endpoints = {
-            2: "https://denis-connectable-lawson.ngrok-free.dev//api/pengiriman", #KELOMPOK ARYA
-            1: "https://9026dd18c3e6.ngrok-free.app/api/shipments" #KELOMPOK MANDA
+            2: "https://denis-connectable-lawson.ngrok-free.dev/api/pengiriman", #KELOMPOK ARYA
+            1: "https://8e938fbc354d.ngrok-free.app/api/shipments" #KELOMPOK MANDA
         }
         url_distributor = distributor_endpoints.get(id_distributor)
 
@@ -379,8 +380,8 @@ def kirim_ke_distributor():
 
 
                     retail_endpoints = {
-                        1: "http://192.168.1.54:5000/api/orders/resi", #alden
-                        2: "http://192.168.1.49:5000/api/orders/resi" #najla
+                        1: "https://flexuous-reasonedly-shizue.ngrok-free.dev/api/orders/resi", #alden
+                        2: "https://continuously-solvolytic-sofia.ngrok-free.dev/api/orders/resi" #najla
                     }
                     url_retail = retail_endpoints.get(order.id_retail)
 

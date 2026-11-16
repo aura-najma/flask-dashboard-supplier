@@ -1,14 +1,8 @@
 # Supply Chain Management — Supplier Integration Module
 
-**Proyek Akademik | Integrasi Aplikasi Korporasi | Universitas Airlangga | 2025**
-
 ## Gambaran Proyek
 
-Supplier Integration Module adalah aplikasi web berbasis **Python, Flask, dan MySQL** yang dikembangkan untuk menyimulasikan integrasi proses bisnis antara tiga sistem independen dalam rantai pasok: **Retail, Supplier, dan Distributor**.
-
-Dalam skenario proyek, Supplier berperan sebagai pemasok sayuran beku yang menerima pesanan dari Retail, memvalidasi stok, meminta penawaran biaya pengiriman kepada Distributor, dan memproses pengiriman melalui Distributor yang dipilih Retail.
-
-Komunikasi antarsistem menggunakan **REST API, JSON, dan mekanisme callback** untuk pertukaran informasi pesanan, biaya pengiriman, status, serta nomor resi.
+Supplier Integration Module adalah aplikasi web berbasis **Python, Flask, dan MySQL** yang dikembangkan untuk menyimulasikan integrasi proses bisnis antara tiga sistem independen dalam rantai pasok: **Retail, Supplier, dan Distributor**. Dalam skenario proyek, Supplier berperan sebagai pemasok sayuran beku yang menerima pesanan dari Retail, memvalidasi stok, meminta penawaran biaya pengiriman kepada Distributor, dan memproses pengiriman melalui Distributor yang dipilih Retail. Komunikasi antarsistem menggunakan **REST API, JSON, dan mekanisme callback** untuk pertukaran informasi pesanan, biaya pengiriman, status, serta nomor resi.
 
 ## Fitur Utama
 

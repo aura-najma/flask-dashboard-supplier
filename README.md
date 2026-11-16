@@ -1,18 +1,14 @@
 # Supply Chain Management — Supplier Integration Module
 
-**Proyek Akademik | Integrasi Aplikasi Korporasi | Universitas Airlangga | 2025**
-
 ## 1. Gambaran Proyek
 
 Supplier Integration Module merupakan aplikasi web berbasis **Python, Flask, dan MySQL** yang dikembangkan untuk menyimulasikan integrasi proses bisnis dalam rantai pasok yang melibatkan tiga sistem independen, yaitu **Retail, Supplier, dan Distributor**.
 
-Dalam simulasi ini, modul Supplier merepresentasikan CV Sehat Sayur Sejahtera, perusahaan pemasok sayuran beku yang berlokasi di Malang.
+Dalam simulasi proyek Ujian Tengah Semester (UTS) untuk mata kuliah Integrasi Aplikasi Korporasi (IAK) ini, modul Supplier merepresentasikan CV Sehat Sayur Sejahtera, perusahaan pemasok sayuran beku yang berlokasi di Malang.
 
 Supplier bertanggung jawab untuk mengelola produk dan persediaan, menerima pesanan dari Retail, melakukan validasi pesanan, meminta penawaran biaya pengiriman kepada Distributor, serta meneruskan pesanan kepada Distributor yang dipilih Retail.
 
-Integrasi antarmodul dilakukan melalui **REST API menggunakan pertukaran data JSON**, termasuk mekanisme request/response dan callback untuk menyinkronkan informasi pesanan dan pengiriman.
-
-Proyek ini merupakan tugas kelompok yang melibatkan pengembangan modul Retail, Supplier, dan Distributor oleh tim yang berbeda.
+Integrasi antarmodul dilakukan melalui **REST API menggunakan pertukaran data JSON**, termasuk mekanisme request/response dan callback untuk menyinkronkan informasi pesanan dan pengiriman. Proyek ini merupakan tugas kelompok yang melibatkan pengembangan modul Retail, Supplier, dan Distributor oleh tim yang berbeda.
 
 ## 2. Fitur Utama
 
